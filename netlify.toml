@@ -1,0 +1,10 @@
+# Netlify 설정 — 빌드 과정 없는 정적 단일 페이지 앱
+[build]
+  publish = "."
+  command = ""
+
+# service-worker.js는 항상 최신을 받아오도록 (구버전 SW 고착 방지)
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "no-cache"
