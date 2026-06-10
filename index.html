@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="서국도 맵">
 <link rel="apple-touch-icon" href="/icon-192.png">
-<meta name="theme-color" content="#FAF7F0">
+<meta name="theme-color" content="#D97757">
 <style>
 :root{
   --paper:#FAF7F0; --paper-deep:#F1ECE0;
@@ -18,6 +18,7 @@
   --c-exhibition:#17150F; --c-lecture:#F5CE00; --c-village:#5BC2E7;
   --c-event:#F47920; --c-cafe:#8E7CC3; --c-toilet:#7A8B8F;
   --fav:#C8102E; --wish:#1A6E5A; --goods:#B05A1E;
+  --coral:#D97757; --coral-deep:#993C1D; --coral-soft:#FAECE7; --coral-mid:#F5C4B3; --coral-text:#FBF7F2;
   --radius:10px; --sidebar-w:310px; --header-h:58px;
   font-size:15px;
 }
@@ -28,16 +29,17 @@ body{
   background:var(--paper); color:var(--ink);
 }
 
-/* ── 헤더 ── */
-header{height:var(--header-h);display:flex;align-items:center;gap:14px;padding:0 16px;
-  border-bottom:2px solid var(--ink);background:var(--paper);position:relative;z-index:30;}
-.brand{display:flex;flex-direction:column;line-height:1.05;white-space:nowrap;}
-.brand b{font-size:1.0rem;letter-spacing:-0.02em;}
-.brand span{font-size:0.66rem;color:var(--ink-soft);letter-spacing:0.13em;text-transform:uppercase;}
+/* ── 헤더 (상단 고정 · 코랄) ── */
+header{position:fixed;top:0;left:0;right:0;z-index:45;
+  height:calc(var(--header-h) + env(safe-area-inset-top,0px));
+  display:flex;align-items:center;gap:12px;padding:env(safe-area-inset-top,0px) 12px 0 16px;
+  border-bottom:2px solid var(--coral-deep);background:var(--coral);color:var(--coral-text);}
+.brand{white-space:nowrap;}
+.brand b{font-size:1.02rem;letter-spacing:-0.02em;}
 .searchbox{position:relative;flex:1;max-width:430px;}
-.searchbox input{width:100%;height:38px;border:1.5px solid var(--ink);border-radius:999px;background:#fff;
-  padding:0 40px 0 16px;font:inherit;font-size:0.92rem;outline:none;}
-.searchbox input:focus{box-shadow:0 0 0 3px rgba(23,21,15,.12);}
+.searchbox input{width:100%;height:38px;border:1.5px solid var(--coral-deep);border-radius:999px;background:#fff;
+  padding:0 40px 0 16px;font:inherit;font-size:0.92rem;outline:none;color:var(--ink);}
+.searchbox input:focus{box-shadow:0 0 0 3px rgba(251,247,242,.45);}
 .searchbox .s-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--ink-soft);}
 .search-results{position:absolute;top:44px;left:0;right:0;background:#fff;border:1.5px solid var(--ink);
   border-radius:12px;max-height:300px;overflow:auto;display:none;box-shadow:0 10px 24px rgba(23,21,15,.14);}
@@ -50,17 +52,38 @@ header{height:var(--header-h);display:flex;align-items:center;gap:14px;padding:0
 .sr-dot{width:9px;height:9px;border-radius:50%;flex:none;}
 .sr-empty{padding:14px;color:var(--ink-soft);font-size:0.85rem;}
 
-/* ── 레이아웃 / 사이드바 ── */
-.layout{display:flex;height:calc(100% - var(--header-h));}
-aside{width:var(--sidebar-w);flex:none;border-right:1.5px solid var(--line);background:var(--paper);
-  display:flex;flex-direction:column;z-index:20;}
-.tabs{display:flex;border-bottom:1.5px solid var(--line);}
-.tabs button{flex:1;padding:12px 2px;border:0;background:none;font:inherit;font-weight:700;font-size:0.8rem;
-  color:var(--ink-soft);cursor:pointer;border-bottom:3px solid transparent;}
-.tabs button.active{color:var(--ink);border-bottom-color:var(--ink);}
-.tabs .badge{display:inline-block;min-width:18px;padding:1px 5px;border-radius:99px;font-size:0.66rem;
-  background:var(--paper-deep);color:var(--ink-soft);margin-left:2px;}
-.tabs button.active .badge{background:var(--ink);color:var(--paper);}
+/* ── 레이아웃 (고정 헤더만큼 상단 여백 확보) ── */
+.layout{display:flex;height:100%;padding-top:calc(var(--header-h) + env(safe-area-inset-top,0px));}
+
+/* ── 상단 통합 메뉴 (햄버거 + 드롭다운) ── */
+.menu-btn{flex:none;min-width:44px;min-height:44px;border:1.5px solid rgba(251,247,242,.55);border-radius:11px;
+  background:none;color:var(--coral-text);font-size:1.25rem;line-height:1;cursor:pointer;}
+.menu-btn:hover,.menu-btn[aria-expanded="true"]{background:var(--coral-deep);border-color:var(--coral-deep);}
+.menu-drop{position:absolute;top:calc(100% + 8px);right:12px;min-width:235px;display:none;flex-direction:column;
+  background:#fff;border:1.5px solid var(--coral-deep);border-radius:14px;padding:6px;
+  box-shadow:0 14px 34px rgba(23,21,15,.22);}
+.menu-drop.open{display:flex;}
+.menu-drop button{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:0;border-radius:9px;
+  background:none;font:inherit;font-size:0.92rem;font-weight:700;color:var(--ink);cursor:pointer;text-align:left;}
+.menu-drop button:hover{background:var(--coral-soft);}
+.menu-drop button.active{background:var(--coral-soft);color:var(--coral-deep);}
+.menu-drop .badge{margin-left:auto;min-width:20px;text-align:center;padding:2px 7px;border-radius:99px;
+  font-size:0.7rem;font-weight:800;background:var(--coral-mid);color:var(--coral-deep);}
+.menu-drop button.active .badge{background:var(--coral-deep);color:var(--coral-text);}
+
+/* ── 바텀시트 (필터·즐겨찾기·위시리스트 패널) ── */
+aside{position:fixed;left:0;right:0;bottom:0;max-height:62%;background:var(--paper);
+  border-top:2px solid var(--coral-deep);border-radius:18px 18px 0 0;display:flex;flex-direction:column;
+  transform:translateY(102%);transition:transform .28s ease;z-index:47;
+  box-shadow:0 -10px 32px rgba(23,21,15,.2);padding-bottom:env(safe-area-inset-bottom,0px);}
+aside.open{transform:translateY(0);}
+@media (min-width:761px){aside{left:50%;right:auto;width:480px;margin-left:-240px;}}
+.m-toggle{display:block;width:100%;min-height:44px;padding:14px 0 10px;border:0;background:none;cursor:pointer;flex:none;}
+.m-toggle::before{content:"";display:block;width:44px;height:4px;border-radius:99px;
+  background:var(--booth-line);margin:0 auto;}
+.scrim{position:fixed;inset:0;background:rgba(23,21,15,.35);opacity:0;pointer-events:none;
+  transition:opacity .25s ease;z-index:46;}
+aside.open ~ .scrim{opacity:1;pointer-events:auto;}
 .panel{flex:1;overflow:auto;padding:16px;display:none;}
 .panel.active{display:block;}
 .panel h3{font-size:0.72rem;letter-spacing:0.12em;color:var(--ink-soft);margin:6px 0 10px;text-transform:uppercase;}
@@ -72,7 +95,7 @@ aside{width:var(--sidebar-w);flex:none;border-right:1.5px solid var(--line);back
 .f-chip .swatch{width:16px;height:16px;border-radius:5px;border:1px solid rgba(0,0,0,.18);flex:none;}
 .f-chip .cnt{margin-left:auto;font-size:0.72rem;color:var(--ink-soft);font-weight:700;}
 .f-chip.off{opacity:.38;}
-.f-chip.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink) inset;}
+.f-chip.on{border-color:var(--coral-deep);box-shadow:0 0 0 1px var(--coral-deep) inset;background:var(--coral-soft);}
 .f-actions{display:flex;gap:8px;margin-top:12px;}
 .f-actions button{flex:1;padding:8px 0;border:1.5px solid var(--ink);border-radius:999px;background:none;
   font:inherit;font-size:0.78rem;font-weight:700;cursor:pointer;}
@@ -197,21 +220,9 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
 .sns-cancel:hover{border-color:var(--ink);color:var(--ink);}
 
 /* ── 모바일 ── */
-.m-toggle{display:none;}
 @media (max-width:760px){
   :root{--header-h:52px;}
-  .brand span{display:none;}
-  .layout{flex-direction:column;}
-  aside{position:fixed;left:0;right:0;bottom:0;width:100%;max-height:58%;border-right:0;
-    border-top:2px solid var(--ink);border-radius:18px 18px 0 0;
-    transform:translateY(calc(100% - 46px));transition:transform .28s ease;z-index:40;}
-  aside.open{transform:translateY(0);}
-  .m-toggle{display:block;width:100%;padding:12px 0 8px;border:0;background:none;cursor:pointer;}
-  .m-toggle::before{content:"";display:block;width:44px;height:4px;border-radius:99px;
-    background:var(--booth-line);margin:0 auto;}
-  .map-wrap{height:100%;}
   .map-hint{display:none;}
-  .zoom-ctrl{bottom:64px;}
 }
 @media (prefers-reduced-motion:reduce){.booth.pulse{animation:none;}aside{transition:none;}}
 </style>
@@ -219,25 +230,23 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
 <body>
 
 <header>
-  <div class="brand">
-    <b>2026 서울국제도서전 부스 지도</b>
-    <span>SIBF Interactive Floor Plan</span>
-  </div>
+  <div class="brand"><b>📖 서국도 맵</b></div>
   <div class="searchbox">
     <input id="searchInput" type="text" placeholder="부스 번호·출판사 검색 (예: A2001, 문학동네)" autocomplete="off" aria-label="부스 검색">
     <span class="s-icon">⌕</span>
     <div class="search-results" id="searchResults" role="listbox"></div>
   </div>
+  <button class="menu-btn" id="menuBtn" aria-label="메뉴" aria-haspopup="true" aria-expanded="false">☰</button>
+  <div class="menu-drop" id="menuDrop">
+    <button id="tabFilter" class="active">필터·범례</button>
+    <button id="tabFav">★ 즐겨찾기<span class="badge" id="favCount">0</span></button>
+    <button id="tabWish">📚 위시리스트<span class="badge" id="wishCount">0</span></button>
+  </div>
 </header>
 
 <div class="layout">
   <aside id="sidebar">
-    <button class="m-toggle" id="mToggle" aria-label="패널 열기/닫기"></button>
-    <div class="tabs">
-      <button id="tabFilter" class="active">필터·범례</button>
-      <button id="tabFav">★ 즐겨찾기<span class="badge" id="favCount">0</span></button>
-      <button id="tabWish">📚 위시리스트<span class="badge" id="wishCount">0</span></button>
-    </div>
+    <button class="m-toggle" id="mToggle" aria-label="패널 닫기"></button>
 
     <div class="panel active" id="panelFilter">
       <h3>카테고리 필터</h3>
@@ -274,6 +283,7 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
     </div>
     <div class="map-hint">휠·핀치 확대 / 드래그 이동 / 부스 클릭 → 상세·위시리스트 / ☆ 클릭 → 즐겨찾기</div>
   </div>
+  <div class="scrim" id="scrim"></div>
 </div>
 
 <!-- 부스 상세 모달 -->
@@ -948,6 +958,32 @@ document.getElementById("storageNote").textContent=Store.persistent
 
 /* 초기화 */
 renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransform();
+</script>
+<script>
+/* ── 상단 통합 메뉴(햄버거) UI 배선 — 탭 전환·저장 로직은 기존 핸들러를 그대로 사용 ── */
+(function(){
+  const menuBtn=document.getElementById("menuBtn");
+  const menuDrop=document.getElementById("menuDrop");
+  const sidebarEl=document.getElementById("sidebar");
+  const scrim=document.getElementById("scrim");
+  function closeMenu(){menuDrop.classList.remove("open");menuBtn.setAttribute("aria-expanded","false");}
+  menuBtn.addEventListener("click",()=>{
+    const open=menuDrop.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded",open?"true":"false");
+  });
+  /* 항목 탭 → 메뉴 닫고 바텀시트 열기 (해당 패널 전환은 기존 onclick이 수행) */
+  ["tabFilter","tabFav","tabWish"].forEach(id=>{
+    document.getElementById(id).addEventListener("click",()=>{
+      closeMenu(); sidebarEl.classList.add("open");
+    });
+  });
+  /* 메뉴 바깥 탭 → 메뉴 닫기 */
+  document.addEventListener("click",e=>{
+    if(!e.target.closest("#menuDrop") && !e.target.closest("#menuBtn")) closeMenu();
+  });
+  /* 스크림 탭 → 바텀시트 닫기 */
+  scrim.addEventListener("click",()=>sidebarEl.classList.remove("open"));
+})();
 </script>
 <script>
 if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js')); }
