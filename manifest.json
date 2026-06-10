@@ -1,0 +1,25 @@
+{
+  "name": "2026 서울국제도서전 맵",
+  "short_name": "서국도 맵",
+  "description": "2026 서울국제도서전 디지털 부스 지도",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF7F0",
+  "theme_color": "#FAF7F0",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
