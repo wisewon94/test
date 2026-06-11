@@ -183,21 +183,10 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
 .float-ctrl .fc-fav{position:relative;background:var(--neon);display:flex;align-items:center;justify-content:center;}
 .float-ctrl .fc-fav:hover{background:var(--neon);filter:brightness(.92);}
 .fc-fav svg path{stroke:#111111;}
-body.list-open .float-ctrl,
-body.list-open .bottom-pill{display:none;}
-
-/* ── 하단 플로팅 바 (블랙 캡슐: 현재 홀 + 리셋) ── */
-.bottom-pill{position:fixed;left:50%;transform:translateX(-50%);
-  bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:44;
-  height:54px;display:flex;align-items:center;gap:6px;padding:0 8px 0 20px;
-  background:var(--ink);border-radius:999px;box-shadow:0 4px 16px rgba(17,17,17,.28);}
+body.list-open .float-ctrl{display:none;}
 .fab-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;
   border-radius:99px;background:var(--neon);border:1.5px solid var(--ink);
   font-size:0.68rem;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:center;}
-.bp-hall{min-width:46px;text-align:center;font-size:0.92rem;font-weight:800;color:#fff;}
-.bp-reset{flex:none;width:44px;height:44px;border:0;border-radius:50%;background:none;
-  color:#fff;font-size:1.25rem;font-weight:700;cursor:pointer;}
-.bp-reset:hover{background:rgba(255,255,255,.16);}
 
 /* ── 목록 뷰 (존별 섹션 스크롤 리스트) ── */
 .list-view{position:fixed;inset:0;z-index:40;background:var(--paper);display:none;overflow-y:auto;
@@ -376,11 +365,7 @@ body.list-open .bottom-pill{display:none;}
   </button>
   <button id="zoomIn" aria-label="확대">＋</button>
   <button id="zoomOut" aria-label="축소">－</button>
-</div>
-
-<div class="bottom-pill">
-  <span class="bp-hall" id="hallNow">전체</span>
-  <button class="bp-reset" id="zoomReset" aria-label="처음으로">⟲</button>
+  <button id="zoomReset" aria-label="처음으로">⟲</button>
 </div>
 
 <div class="list-view" id="listView">
@@ -1288,20 +1273,6 @@ renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransfor
     const it=e.target.closest(".lv-item");
     if(it){ setView("map"); focusBooth(it.dataset.id); }
   });
-
-  /* ── 하단 바: 현재 보고 있는 홀 표시 (뷰포트 중심 좌표 기준) ── */
-  const hallNow=document.getElementById("hallNow");
-  function updateHallNow(){
-    const vb=svg.viewBox.baseVal;
-    const cx=(vb.width/2-state.tx)/state.scale, cy=(vb.height/2-state.ty)/state.scale;
-    const inR=r=>cx>=r.x&&cx<=r.x+r.w&&cy>=r.y&&cy<=r.y+r.h;
-    hallNow.textContent=inR(HALL_BOUNDS.A)?"A홀":inR(HALL_BOUNDS.B1)?"B1홀":"전체";
-  }
-  svg.addEventListener("pointerup",updateHallNow);
-  svg.addEventListener("wheel",updateHallNow,{passive:true});
-  ["zoomIn","zoomOut","zoomReset"].forEach(id=>document.getElementById(id).addEventListener("click",updateHallNow));
-  document.querySelectorAll("#hallChips .chip").forEach(c=>c.addEventListener("click",updateHallNow));
-  updateHallNow();
 
   /* ── 시트 핸들 아래로 스와이프 → 닫기 ── */
   const handle=document.getElementById("mToggle");
