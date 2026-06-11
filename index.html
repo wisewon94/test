@@ -984,6 +984,16 @@ renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransfor
   /* 스크림 탭 → 바텀시트 닫기 */
   scrim.addEventListener("click",()=>sidebarEl.classList.remove("open"));
 })();
+
+/* ── 모바일 초기 뷰: 지도 중앙 기준 5배 확대 상태로 시작 ── */
+(function(){
+  if(!window.matchMedia("(max-width:760px)").matches) return;
+  const vb=svg.viewBox.baseVal, s=5;
+  state.scale=s;
+  state.tx=vb.width/2*(1-s);
+  state.ty=vb.height/2*(1-s);
+  applyTransform();
+})();
 </script>
 <script>
 if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js')); }
