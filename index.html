@@ -404,18 +404,18 @@ const SPECIAL = [
   {id:"B703", name:"주제전시 Theme Exhibition",       cat:"exhibition",x:622,y:175,w:48, h:85, hall:"B1", desc:"2026 도서전 주제관."},
   {id:"B704", name:"책마당 Book Salon",               cat:"lecture",   x:692,y:175,w:128,h:85, hall:"B1", desc:"작가 강연·북토크 메인 무대 (B1홀)."},
   {id:"B400", name:"책마을 Book Village",             cat:"village",   x:418,y:285,w:132,h:125,hall:"B1", desc:"독립출판·아트북 마켓 존."},
-  {id:"EV-B1",name:"BBK × 글로벌비즈니스 라운지 이벤트",cat:"event",    x:600,y:553,w:95, h:18, hall:"B1", desc:"홀 연결 통로 팝업 이벤트."},
+  {id:"EV-B1",name:"BBK × 글로벌비즈니스 라운지 이벤트",cat:"event",    x:600,y:574,w:95, h:18, hall:"B1", corridor:1, desc:"홀 연결 통로 팝업 이벤트."},
   {id:"A1901",name:"책낭독당 2 Readers Hall 2",       cat:"lecture",   x:63, y:620,w:36, h:78, hall:"A",  desc:"작가 낭독·대담 무대 (A홀 서측)."},
   {id:"A2402W",name:"책낭독당 1 Readers Hall 1",      cat:"lecture",   x:845,y:620,w:62, h:78, hall:"A",  desc:"메인 낭독 무대 (A홀 동측)."},
   {id:"EV-A", name:"사인회존 Autograph Zone",         cat:"event",     x:63, y:1012,w:80,h:14, hall:"A",  desc:"작가 사인회 전용 공간."},
-  {id:"WC-A1",name:"화장실 (A홀 좌측 상단)",          cat:"toilet",    x:152,y:592,w:22,h:22, hall:"A",  desc:"A1900 구역 인근."},
-  {id:"WC-A2",name:"화장실 (A홀 우측 상단)",          cat:"toilet",    x:930,y:592,w:22,h:22, hall:"A",  desc:"A2400 구역 인근."},
-  {id:"WC-A3",name:"화장실 (A홀 하단 1)",             cat:"toilet",    x:410,y:1042,w:22,h:22,hall:"A",  desc:"A홀 하단 중앙."},
-  {id:"WC-A4",name:"화장실 (A홀 하단 2)",             cat:"toilet",    x:577,y:1042,w:22,h:22,hall:"A",  desc:"A홀 하단 중앙."},
-  {id:"WC-B1",name:"화장실 (B1홀 상단)",              cat:"toilet",    x:932,y:165,w:22,h:22, hall:"B1", desc:"B1홀 출입구 인근."},
-  {id:"WC-B2",name:"화장실 (B1홀 우측)",              cat:"toilet",    x:932,y:392,w:22,h:22, hall:"B1", desc:"티켓 데스크 인근."},
-  {id:"TK-B1",name:"티켓·인포데스크 (B1홀)",          cat:"event",     x:912,y:420,w:62,h:55, hall:"B1", desc:"B1홀 티켓 발권 및 안내."},
-  {id:"TK-A", name:"티켓·인포데스크 (A홀)",           cat:"event",     x:845,y:1062,w:88,h:34,hall:"A",  desc:"A홀 티켓 발권 및 안내."},
+  {id:"WC-A1",name:"화장실 (A홀 좌측 상단)",          cat:"toilet",    x:152,y:580,w:22,h:22, hall:"A",  fac:1, desc:"A1900 구역 인근."},
+  {id:"WC-A2",name:"화장실 (A홀 우측 상단)",          cat:"toilet",    x:930,y:580,w:22,h:22, hall:"A",  fac:1, desc:"A2400 구역 인근."},
+  {id:"WC-A3",name:"화장실 (A홀 하단 1)",             cat:"toilet",    x:375,y:1029,w:22,h:22,hall:"A",  fac:1, desc:"A홀 하단 중앙."},
+  {id:"WC-A4",name:"화장실 (A홀 하단 2)",             cat:"toilet",    x:497,y:1029,w:22,h:22,hall:"A",  fac:1, desc:"A홀 하단 중앙."},
+  {id:"WC-B1",name:"화장실 (B1홀 우측 상단)",         cat:"toilet",    x:940,y:170,w:22,h:22, hall:"B1", fac:1, desc:"B1홀 출입구 인근."},
+  {id:"WC-B2",name:"화장실 (B1홀 우측)",              cat:"toilet",    x:915,y:445,w:22,h:22, hall:"B1", fac:1, desc:"티켓 데스크 인근."},
+  {id:"TK-B1",name:"티켓·인포데스크 (B1홀)",          cat:"event",     x:945,y:425,w:58,h:55, hall:"B1", fac:1, desc:"B1홀 티켓 발권 및 안내."},
+  {id:"TK-A", name:"티켓·인포데스크 (A홀)",           cat:"event",     x:845,y:1062,w:88,h:34,hall:"A",  fac:1, desc:"A홀 티켓 발권 및 안내."},
 ];
 
 /* ── (2) 일반 부스 블록 — PDF 블록 구조(좌측 소형 부스 그리드 + 우측 대형 부스) ──
@@ -469,6 +469,46 @@ const BLOCKS = [
   {label:"A600", hall:"A",x:684,y:919,w:160,h:88,cols:1,names:["봄알람","타이피스트"],big:"주빈국 프랑스 Guest of Honor France"},
 ];
 
+/* ── 존 블록 간 간격 상수 (전 존 공통) ── */
+const ZONE_ROW_GAP = 15;   /* 세로 인접 존 블록 사이 간격 */
+const ZONE_COL_GAP = 14;   /* 가로 인접 존 블록 사이 간격 */
+const CORRIDOR_GAP = 48;   /* 메인 동선(통로) 폭 — 일반 존 간격과 구분 */
+const HALL_PAD     = 14;   /* 홀 아웃박스 = 콘텐츠 바운딩 박스 + 패딩 */
+
+/* 행 단위 연쇄 배치 정의 — "|" = 메인 동선(CORRIDOR_GAP).
+   첫 행만 y0 앵커, 이후 행 y는 ZONE_ROW_GAP으로 체인 계산 */
+const LAYOUT_ROWS = [
+  /* Hall B1 — B400(책마을, x418..550) 우측에서 체인 시작 */
+  {hall:"B1", y0:275, x0:564, cols:["B500","B600"]},
+  {hall:"B1",         x0:564, cols:["B100","B200","B300"]},
+  /* Hall A */
+  {hall:"A",  y0:620, x0:118, cols:["A1900","A2000","A2100","A2200","A2300","A2400"]},
+  {hall:"A",          x0:40,  cols:["A1300","A1400","A1500","A1600","A1700","|","A1800"]},
+  {hall:"A",          x0:40,  cols:["A700","A800","A900","|","A1000","A1100","|","A1200"]},
+  {hall:"A",          x0:40,  cols:["A100","A200","A300","A400","A500","|","A600"]},
+];
+(function layoutZones(){
+  const byLabel={}; BLOCKS.forEach(b=>byLabel[b.label]=b);
+  const yNext={};
+  LAYOUT_ROWS.forEach(r=>{
+    const y=(r.y0!==undefined)?r.y0:yNext[r.hall];
+    let x=r.x0, gap=0, rowH=0;
+    r.cols.forEach(c=>{
+      if(c==="|"){gap=CORRIDOR_GAP;return;}
+      x+=gap;
+      const z=byLabel[c]; z.x=x; z.y=y;
+      x+=z.w; gap=ZONE_COL_GAP;
+      rowH=Math.max(rowH,z.h);
+    });
+    yNext[r.hall]=y+rowH+ZONE_ROW_GAP;
+  });
+  /* B700: B704(x692,w128) 우측에 열 체인, 하단은 B500 행 상단에서 ZONE_ROW_GAP 확보 */
+  const b7=byLabel["B700"];
+  b7.x=692+128+ZONE_COL_GAP;
+  b7.y=162;
+  b7.h=(275-ZONE_ROW_GAP)-b7.y;
+})();
+
 /* 블록 → 개별 부스 생성 (PDF의 '좌측 소형 그리드 + 우측 대형' 패턴 재현) */
 function buildBooths(){
   const out = [...SPECIAL];
@@ -497,15 +537,31 @@ function buildBooths(){
 }
 const BOOTHS = buildBooths();
 
-/* 정적 요소: 홀 외곽·라벨·출입구 */
+/* 홀 아웃박스 자동 계산: 시설(fac)·통로(corridor) 요소 제외한 콘텐츠 bbox + HALL_PAD */
+function computeHallBounds(){
+  const out={};
+  ["B1","A"].forEach(h=>{
+    const items=BOOTHS.filter(b=>b.hall===h && !b.fac && !b.corridor);
+    const x1=Math.min(...items.map(b=>b.x)),  y1=Math.min(...items.map(b=>b.y));
+    const x2=Math.max(...items.map(b=>b.x+b.w)), y2=Math.max(...items.map(b=>b.y+b.h));
+    out[h]={x:x1-HALL_PAD, y:y1-HALL_PAD, w:(x2-x1)+HALL_PAD*2, h:(y2-y1)+HALL_PAD*2};
+  });
+  return out;
+}
+const HALL_BOUNDS=computeHallBounds();
+
+/* 정적 요소: 홀 외곽·라벨·출입구 (출입구는 공식 PDF 위치, 한/영 병기) */
 const STATICS = [
   {type:"title"},
-  {type:"hall", x:405,y:150,w:585,h:425,label:"Hall B1",lx:405,ly:140},
-  {type:"hall", x:35, y:605,w:902,h:452,label:"Hall A", lx:38, ly:598},
-  {type:"gate", x:962,y:300,text:"B1홀",sub:"출입구 ⟷"},
-  {type:"gate", x:700,y:1085,text:"A홀 입구 ↑",sub:""},
-  {type:"gate", x:215,y:1085,text:"A홀 출구 ↓",sub:""},
-  {type:"arrow",x:625,y:585},{type:"arrow",x:760,y:585},
+  {type:"hall", ...HALL_BOUNDS.B1, label:"Hall B1", lx:HALL_BOUNDS.B1.x, ly:HALL_BOUNDS.B1.y-8},
+  {type:"hall", ...HALL_BOUNDS.A,  label:"Hall A",  lx:HALL_BOUNDS.A.x,  ly:HALL_BOUNDS.A.y-8},
+  /* A홀 하단: 입구(중앙우측·↑) / 출구(좌측·↓) — y는 홀 외곽선 하단 */
+  {type:"gate-v", dir:"up",   x:647, y:HALL_BOUNDS.A.y+HALL_BOUNDS.A.h, ko:"A홀 입구", en:"Hall A Entrance"},
+  {type:"gate-v", dir:"down", x:264, y:HALL_BOUNDS.A.y+HALL_BOUNDS.A.h, ko:"A홀 출구", en:"Hall A Exit"},
+  /* B1홀 우측: 좌우 화살표 출입구 */
+  {type:"gate-h", x:HALL_BOUNDS.B1.x+HALL_BOUNDS.B1.w+12, y:300, ko:"B1홀 출입구", en:"Hall B1 Entrance & Exit"},
+  /* 홀 간 연결 통로: 상하 양방향 화살표 2개 (이벤트 부스 양측) */
+  {type:"arrow",x:565,y:590},{type:"arrow",x:745,y:590},
 ];
 
 /* ============================================================
@@ -555,13 +611,23 @@ function renderMap(){
     }else if(s.type==="hall"){
       el("rect",{x:s.x,y:s.y,width:s.w,height:s.h,fill:"none",stroke:"#111111","stroke-width":1.6,rx:2});
       const t=el("text",{x:s.lx,y:s.ly,"font-size":21,"font-weight":800,fill:"#111111"});t.textContent=s.label;
-    }else if(s.type==="gate"){
-      /* 입구/통로: 점선 보더의 옅은 회색 띠 (시설 레이어 구분) */
-      const tw=Math.max(s.text.length,(s.sub||"").length)*7+16, th=s.sub?30:17;
-      el("rect",{x:s.x-tw/2,y:s.y-12,width:tw,height:th,rx:3,fill:"#EFEFED",
+    }else if(s.type==="gate-v"){
+      /* A홀 출입구: 화살표 + 점선 보더 회색 띠 + 한/영 병기 라벨 */
+      const arrow=el("text",{x:s.x,y:s.y+22,"font-size":18,"font-weight":900,fill:"#111111","text-anchor":"middle"});
+      arrow.textContent=s.dir==="up"?"↑":"↓";
+      el("rect",{x:s.x-46,y:s.y+30,width:92,height:27,rx:3,fill:"#EFEFED",
         stroke:"#8A8A86","stroke-width":0.7,"stroke-dasharray":"2.5 2"});
-      const t=el("text",{x:s.x,y:s.y,"font-size":11,"font-weight":800,fill:"#111111","text-anchor":"middle"});t.textContent=s.text;
-      if(s.sub){const t2=el("text",{x:s.x,y:s.y+13,"font-size":10,"font-weight":700,fill:"#8A8A86","text-anchor":"middle"});t2.textContent=s.sub;}
+      const k=el("text",{x:s.x,y:s.y+41,"font-size":9,"font-weight":800,fill:"#111111","text-anchor":"middle"});k.textContent=s.ko;
+      const e2=el("text",{x:s.x,y:s.y+52,"font-size":6.5,"font-weight":700,fill:"#8A8A86","text-anchor":"middle"});e2.textContent=s.en;
+    }else if(s.type==="gate-h"){
+      /* B1홀 출입구: 좌우 화살표 2개 + 한/영 병기 라벨 */
+      const cx=s.x+50;
+      const a1=el("text",{x:cx,y:s.y,"font-size":15,"font-weight":900,fill:"#111111","text-anchor":"middle"});a1.textContent="⟵";
+      const a2=el("text",{x:cx,y:s.y+15,"font-size":15,"font-weight":900,fill:"#111111","text-anchor":"middle"});a2.textContent="⟶";
+      el("rect",{x:cx-50,y:s.y+23,width:100,height:27,rx:3,fill:"#EFEFED",
+        stroke:"#8A8A86","stroke-width":0.7,"stroke-dasharray":"2.5 2"});
+      const k=el("text",{x:cx,y:s.y+34,"font-size":9,"font-weight":800,fill:"#111111","text-anchor":"middle"});k.textContent=s.ko;
+      const e2=el("text",{x:cx,y:s.y+45,"font-size":6,"font-weight":700,fill:"#8A8A86","text-anchor":"middle"});e2.textContent=s.en;
     }else if(s.type==="arrow"){
       const t=el("text",{x:s.x,y:s.y,"font-size":18,"font-weight":900,fill:"#111111","text-anchor":"middle"});t.textContent="⇅";
     }
@@ -580,6 +646,27 @@ function renderMap(){
   BOOTHS.forEach(b=>{
     const g=el("g",{class:"booth-g","data-id":b.id});
     const dark=(b.cat==="exhibition");
+
+    /* 시설(화장실·티켓데스크): 점선 보더 회색 박스 + 아이콘/라벨.
+       부스와 구분 — 북마크·위시 배지 없음, 탭(.booth) 대상 아님 */
+    if(b.fac){
+      el("rect",{x:b.x,y:b.y,width:b.w,height:b.h,rx:2,fill:"#EFEFED",
+        stroke:"#8A8A86","stroke-width":0.7,"stroke-dasharray":"2.5 2"},g);
+      if(b.cat==="toilet"){
+        const t=el("text",{x:b.x+b.w/2,y:b.y+b.h/2,"text-anchor":"middle","dominant-baseline":"central",
+          "font-size":Math.min(12,b.h*0.6),fill:"#111111","font-weight":800},g);
+        t.textContent="🚻";
+      }else{
+        const t=el("text",{x:b.x+b.w/2,y:b.y+b.h/2-3.5,"text-anchor":"middle","dominant-baseline":"central",
+          "font-size":5.6,"font-weight":800,fill:"#111111"},g);
+        t.textContent="티켓·인포데스크";
+        const t2=el("text",{x:b.x+b.w/2,y:b.y+b.h/2+4.5,"text-anchor":"middle","dominant-baseline":"central",
+          "font-size":4.2,"font-weight":700,fill:"#8A8A86"},g);
+        t2.textContent="Ticket Office·Information";
+      }
+      return;
+    }
+
     const rect=el("rect",{class:"booth","data-id":b.id,x:b.x,y:b.y,width:b.w,height:b.h,rx:2,
       fill:CATEGORIES[b.cat].color},g);
     /* 클릭 처리는 pointerup 탭 판정(endPtr)에서 일괄 수행 */
@@ -653,6 +740,7 @@ function refreshBoothMark(id){
   const g=viewport.querySelector(`.booth-g[data-id="${CSS.escape(id)}"]`);
   if(!g) return;
   const rect=g.querySelector(".booth");
+  if(!rect) return; /* 시설(fac) 등 부스 렉트 없는 요소 가드 */
   rect.classList.toggle("favored",state.favorites.has(id));
   const star=g.querySelector(".booth-star");
   if(star){
@@ -777,7 +865,7 @@ const searchInput=document.getElementById("searchInput"), searchResults=document
 searchInput.addEventListener("input",()=>{
   const q=searchInput.value.trim().toLowerCase();
   if(!q){searchResults.classList.remove("open");return;}
-  const hits=BOOTHS.filter(b=>b.id.toLowerCase().includes(q)||b.name.toLowerCase().includes(q)||(b.block||"").toLowerCase().includes(q)).slice(0,9);
+  const hits=BOOTHS.filter(b=>!b.fac && (b.id.toLowerCase().includes(q)||b.name.toLowerCase().includes(q)||(b.block||"").toLowerCase().includes(q))).slice(0,9);
   searchResults.innerHTML=hits.length
     ? hits.map(b=>`<button data-id="${b.id}"><span class="sr-dot" style="background:${CATEGORIES[b.cat].color}"></span><span class="sr-id">${b.id.replace("A2402W","A2402")}</span><span>${b.name}</span></button>`).join("")
     : `<div class="sr-empty">'${searchInput.value}' 검색 결과가 없습니다.</div>`;
@@ -1043,8 +1131,8 @@ renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransfor
   /* 스크림 탭 → 바텀시트 닫기 */
   scrim.addEventListener("click",()=>sidebarEl.classList.remove("open"));
 
-  /* ── 홀 선택 칩: 해당 홀 영역으로 pan + zoom fit ── */
-  const HALL_RECTS={A:{x:35,y:605,w:902,h:452},B1:{x:405,y:150,w:585,h:425}};
+  /* ── 홀 선택 칩: 해당 홀 영역으로 pan + zoom fit (자동 계산된 아웃박스 사용) ── */
+  const HALL_RECTS={A:HALL_BOUNDS.A,B1:HALL_BOUNDS.B1};
   function fitHall(r){
     const vb=svg.viewBox.baseVal;
     if(!r){state.scale=1;state.tx=0;state.ty=0;applyTransform();return;}
@@ -1095,10 +1183,10 @@ renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransfor
   },true);
 })();
 
-/* ── 모바일 초기 뷰: A홀 입구 부근(700,1020) 기준 5배 확대 상태로 시작 ── */
+/* ── 모바일 초기 뷰: A홀 입구 부근(647,1010) 기준 5배 확대 상태로 시작 ── */
 (function(){
   if(!window.matchMedia("(max-width:760px)").matches) return;
-  const vb=svg.viewBox.baseVal, s=5, cx=700, cy=1020;
+  const vb=svg.viewBox.baseVal, s=5, cx=647, cy=1010;
   state.scale=s;
   state.tx=vb.width/2-s*cx;
   state.ty=vb.height/2-s*cy;
