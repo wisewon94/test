@@ -19,7 +19,7 @@
   --c-event:#F47920; --c-cafe:#8E7CC3; --c-toilet:#7A8B8F;
   --fav:#C8102E; --wish:#1A6E5A; --goods:#B05A1E;
   --coral:#D97757; --coral-deep:#993C1D; --coral-soft:#FAECE7; --coral-mid:#F5C4B3; --coral-text:#FBF7F2;
-  --radius:10px; --sidebar-w:310px; --header-h:58px;
+  --radius:10px; --sidebar-w:310px; --header-h:58px; --bar-h:64px;
   font-size:15px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -34,8 +34,6 @@ header{position:fixed;top:0;left:0;right:0;z-index:45;
   height:calc(var(--header-h) + env(safe-area-inset-top,0px));
   display:flex;align-items:center;gap:12px;padding:env(safe-area-inset-top,0px) 12px 0 16px;
   border-bottom:2px solid var(--coral-deep);background:var(--coral);color:var(--coral-text);}
-.brand{white-space:nowrap;}
-.brand b{font-size:1.02rem;letter-spacing:-0.02em;}
 .searchbox{position:relative;flex:1;max-width:430px;}
 .searchbox input{width:100%;height:38px;border:1.5px solid var(--coral-deep);border-radius:999px;background:#fff;
   padding:0 40px 0 16px;font:inherit;font-size:0.92rem;outline:none;color:var(--ink);}
@@ -52,8 +50,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:45;
 .sr-dot{width:9px;height:9px;border-radius:50%;flex:none;}
 .sr-empty{padding:14px;color:var(--ink-soft);font-size:0.85rem;}
 
-/* ── 레이아웃 (고정 헤더만큼 상단 여백 확보) ── */
-.layout{display:flex;height:100%;padding-top:calc(var(--header-h) + env(safe-area-inset-top,0px));}
+/* ── 레이아웃 (고정 헤더·하단 바만큼 여백 확보) ── */
+.layout{display:flex;height:100%;
+  padding-top:calc(var(--header-h) + env(safe-area-inset-top,0px));
+  padding-bottom:calc(var(--bar-h) + env(safe-area-inset-bottom,0px));}
 
 /* ── 상단 통합 메뉴 (햄버거 + 드롭다운) ── */
 .menu-btn{flex:none;min-width:44px;min-height:44px;border:1.5px solid rgba(251,247,242,.55);border-radius:11px;
@@ -141,10 +141,20 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
 .booth-star{cursor:pointer;}
 .booth-star:hover{opacity:.7;}
 
-.zoom-ctrl{position:absolute;right:16px;bottom:18px;display:flex;flex-direction:column;gap:6px;z-index:10;}
-.zoom-ctrl button{width:40px;height:40px;border:1.5px solid var(--ink);border-radius:10px;background:var(--paper);
-  font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(23,21,15,.12);}
-.zoom-ctrl button:hover{background:var(--ink);color:var(--paper);}
+/* ── 하단 바 (타이틀 + 확대·축소·새로고침) ── */
+.bottom-bar{position:fixed;left:0;right:0;bottom:0;z-index:44;
+  height:calc(var(--bar-h) + env(safe-area-inset-bottom,0px));
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:0 14px env(safe-area-inset-bottom,0px) 16px;
+  background:var(--coral);border-top:2px solid var(--coral-deep);color:var(--coral-text);}
+.bb-brand{min-width:0;}
+.bb-brand b{display:block;font-size:0.95rem;letter-spacing:-0.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bb-ctrl{display:flex;gap:8px;flex:none;}
+.bb-ctrl button{width:50px;height:50px;border:1.5px solid var(--coral-deep);border-radius:12px;
+  background:var(--paper);color:var(--ink);font-size:1.5rem;font-weight:700;cursor:pointer;
+  box-shadow:0 2px 6px rgba(23,21,15,.15);}
+.bb-ctrl button:hover{background:var(--coral-deep);color:var(--coral-text);}
 .map-hint{position:absolute;left:16px;bottom:18px;z-index:10;font-size:0.68rem;color:var(--ink-soft);
   background:rgba(250,247,240,.88);padding:6px 10px;border-radius:8px;border:1px solid var(--line);}
 
@@ -221,8 +231,10 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
 
 /* ── 모바일 ── */
 @media (max-width:760px){
-  :root{--header-h:52px;}
+  :root{--header-h:52px;--bar-h:60px;}
   .map-hint{display:none;}
+  .bb-brand b{font-size:0.8rem;}
+  .bb-ctrl button{width:46px;height:46px;font-size:1.35rem;}
 }
 @media (prefers-reduced-motion:reduce){.booth.pulse{animation:none;}aside{transition:none;}}
 </style>
@@ -230,7 +242,6 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
 <body>
 
 <header>
-  <div class="brand"><b>📖 서국도 맵</b></div>
   <div class="searchbox">
     <input id="searchInput" type="text" placeholder="부스 번호·출판사 검색 (예: A2001, 문학동네)" autocomplete="off" aria-label="부스 검색">
     <span class="s-icon">⌕</span>
@@ -276,15 +287,19 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
     <svg id="map" viewBox="0 0 1024 1170" xmlns="http://www.w3.org/2000/svg" aria-label="부스 배치도">
       <g id="viewport"></g>
     </svg>
-    <div class="zoom-ctrl">
-      <button id="zoomIn" aria-label="확대">＋</button>
-      <button id="zoomOut" aria-label="축소">－</button>
-      <button id="zoomReset" aria-label="초기화" style="font-size:.78rem;">⟲</button>
-    </div>
     <div class="map-hint">휠·핀치 확대 / 드래그 이동 / 부스 클릭 → 상세·위시리스트 / ☆ 클릭 → 즐겨찾기</div>
   </div>
   <div class="scrim" id="scrim"></div>
 </div>
+
+<footer class="bottom-bar">
+  <div class="bb-brand"><b>📖 2026 서울국제도서전 MAP</b></div>
+  <div class="bb-ctrl">
+    <button id="zoomIn" aria-label="확대">＋</button>
+    <button id="zoomOut" aria-label="축소">－</button>
+    <button id="zoomReset" aria-label="새로고침">⟲</button>
+  </div>
+</footer>
 
 <!-- 부스 상세 모달 -->
 <div class="modal-bg" id="modalBg">
