@@ -116,6 +116,13 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
   background:#fff;color:var(--ink);font-size:1.3rem;font-weight:700;cursor:pointer;
   box-shadow:0 2px 10px rgba(17,17,17,.1);}
 .float-ctrl button:hover{background:var(--ink);color:#fff;}
+/* 북마크 카운터: 줌 스택 최상단의 네온 그린 원형 버튼 (블랙 아이콘) */
+.float-ctrl .fc-fav{position:relative;background:var(--neon);display:flex;align-items:center;justify-content:center;}
+.float-ctrl .fc-fav:hover{background:var(--neon);filter:brightness(.92);}
+.fc-fav svg path{stroke:#111111;}
+.fab-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;
+  border-radius:99px;background:var(--neon);border:1.5px solid var(--ink);
+  font-size:0.68rem;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:center;}
 body.list-open .float-ctrl{display:none;}
 
 /* ── 목록 뷰 (탭 + 존별 섹션 스크롤 리스트) ── */
@@ -262,6 +269,12 @@ body.list-open .float-ctrl{display:none;}
 </div>
 
 <div class="float-ctrl">
+  <button class="fc-fav" id="favFab" aria-label="즐겨찾기 목록 열기">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path d="M6 3h12v18l-6-4.5L6 21z" fill="none" stroke-width="2" stroke-linejoin="round"/>
+    </svg>
+    <span class="fab-badge" id="fabFavCount">0</span>
+  </button>
   <button id="zoomIn" aria-label="확대">＋</button>
   <button id="zoomOut" aria-label="축소">－</button>
   <button id="zoomReset" aria-label="처음으로">⟲</button>
@@ -1028,11 +1041,21 @@ renderMap(); applyTransform();
       listContent.innerHTML=`<div class="empty-note">${emptyMsg(base)}</div>`;
     }
   }
-  /* 데이터 변경(즐겨찾기·위시) 시 열려 있으면 스크롤 유지하며 갱신 — toggleFav/addWish/removeWish가 호출 */
+  /* 데이터 변경(즐겨찾기·위시) 시: 뱃지 갱신 + 열려 있으면 스크롤 유지하며 목록 갱신
+     — toggleFav/addWish/removeWish가 호출 */
+  const favBadge=document.getElementById("fabFavCount");
   refreshListView=()=>{
+    favBadge.textContent=state.favorites.size;
     if(!listView.classList.contains("open")) return;
     const st=listView.scrollTop; buildListView(); listView.scrollTop=st;
   };
+  refreshListView(); /* 초기 뱃지 카운트 (localStorage 복원분 반영) */
+
+  /* 초록 북마크 카운터 탭 → 목록 뷰의 즐겨찾기 탭 열기 */
+  document.getElementById("favFab").addEventListener("click",()=>{
+    document.querySelector('#lvTabs .lv-tab[data-tab="fav"]').click();
+    setView("list");
+  });
 
   /* 목록 탭 [전체|즐겨찾기|위시리스트] */
   document.querySelectorAll("#lvTabs .lv-tab").forEach(tab=>{
