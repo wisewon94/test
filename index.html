@@ -37,12 +37,28 @@ header{position:fixed;top:0;left:0;right:0;z-index:45;
   padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 0;
   background:none;border:0;pointer-events:none;}
 .top-row{display:flex;align-items:center;gap:10px;position:relative;}
-.searchbox{position:relative;flex:1;max-width:430px;pointer-events:auto;}
-.searchbox input{width:100%;height:46px;border:1.5px solid var(--ink);border-radius:999px;background:#fff;
-  padding:0 42px 0 18px;font:inherit;font-size:0.92rem;outline:none;color:var(--ink);
+/* ── [지도|목록] 플로팅 세그먼트 토글 (좌상단) ── */
+.seg{display:flex;flex:none;border:1.5px solid var(--ink);border-radius:999px;background:#fff;
+  padding:4px;gap:4px;box-shadow:0 2px 10px rgba(17,17,17,.1);pointer-events:auto;margin-right:auto;}
+.seg-btn{display:flex;align-items:center;gap:6px;min-height:38px;padding:0 15px;border:0;border-radius:999px;
+  background:none;font:inherit;font-size:0.88rem;font-weight:700;color:var(--ink);cursor:pointer;
+  transition:background .25s ease-out;}
+.seg-btn svg{flex:none;}
+.seg-btn svg path{stroke:var(--ink);}
+.seg-btn.active{background:var(--ink);color:#fff;}
+.seg-btn.active svg path{stroke:#fff;}
+/* ── 우상단 원형 검색 버튼 + 펼침형 검색 캡슐 ── */
+.searchbox{position:absolute;inset:0;display:flex;align-items:center;gap:8px;pointer-events:none;
+  opacity:0;transform:scaleX(.6);transform-origin:right center;
+  transition:opacity .25s ease-out,transform .25s ease-out;z-index:5;}
+.searchbox.open{opacity:1;transform:scaleX(1);pointer-events:auto;}
+.searchbox input{flex:1;height:46px;border:1.5px solid var(--ink);border-radius:999px;background:#fff;
+  padding:0 18px;font:inherit;font-size:0.92rem;outline:none;color:var(--ink);min-width:0;
   box-shadow:0 2px 10px rgba(17,17,17,.1);}
 .searchbox input:focus{box-shadow:0 0 0 3px rgba(1,255,1,.35),0 2px 10px rgba(17,17,17,.1);}
-.searchbox .s-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--ink);}
+.search-close{flex:none;width:46px;height:46px;border:1.5px solid var(--ink);border-radius:50%;
+  background:#fff;color:var(--ink);font-size:1.05rem;font-weight:700;cursor:pointer;
+  box-shadow:0 2px 10px rgba(17,17,17,.1);}
 .search-results{position:absolute;top:52px;left:0;right:0;background:#fff;border:1.5px solid var(--ink);
   border-radius:14px;max-height:300px;overflow:auto;display:none;box-shadow:0 10px 24px rgba(17,17,17,.16);}
 .search-results.open{display:block;}
@@ -156,22 +172,48 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
 .booth-star{cursor:pointer;}
 .booth-star:hover{opacity:.7;}
 
-/* ── 플로팅 줌 컨트롤 (우측 하단 세로 스택) ── */
-.float-ctrl{position:fixed;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);
+/* ── 플로팅 줌 컨트롤 (우측, 원형 +/−) ── */
+.float-ctrl{position:fixed;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 86px);
   display:flex;flex-direction:column;gap:8px;z-index:44;}
-.float-ctrl button{width:46px;height:46px;border:1.5px solid var(--ink);border-radius:14px;
+.float-ctrl button{width:46px;height:46px;border:1.5px solid var(--ink);border-radius:50%;
   background:#fff;color:var(--ink);font-size:1.3rem;font-weight:700;cursor:pointer;
   box-shadow:0 2px 10px rgba(17,17,17,.1);}
 .float-ctrl button:hover{background:var(--ink);color:#fff;}
+body.list-open .float-ctrl{display:none;}
 
-/* ── 즐겨찾기 플로팅 버튼 (좌측 하단, 그린 뱃지) ── */
-.fav-fab{position:fixed;left:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:44;
-  width:54px;height:54px;border:1.5px solid var(--ink);border-radius:50%;background:#fff;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(17,17,17,.1);}
-.fav-fab:hover{background:var(--paper-deep);}
-.fab-badge{position:absolute;top:-5px;right:-5px;min-width:22px;height:22px;padding:0 6px;
+/* ── 하단 플로팅 바 (블랙 캡슐: 북마크 + 현재 홀 + 리셋) ── */
+.bottom-pill{position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:44;
+  height:54px;display:flex;align-items:center;gap:14px;padding:0 8px 0 5px;
+  background:var(--ink);border-radius:999px;box-shadow:0 4px 16px rgba(17,17,17,.28);}
+.bp-fav{position:relative;flex:none;width:44px;height:44px;border:0;border-radius:50%;
+  background:var(--neon);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.bp-fav svg path{stroke:#111111;}
+.fab-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;
   border-radius:99px;background:var(--neon);border:1.5px solid var(--ink);
-  font-size:0.72rem;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:center;}
+  font-size:0.68rem;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:center;}
+.bp-hall{min-width:46px;text-align:center;font-size:0.92rem;font-weight:800;color:#fff;}
+.bp-reset{flex:none;width:44px;height:44px;border:0;border-radius:50%;background:none;
+  color:#fff;font-size:1.25rem;font-weight:700;cursor:pointer;}
+.bp-reset:hover{background:rgba(255,255,255,.16);}
+
+/* ── 목록 뷰 (존별 섹션 스크롤 리스트) ── */
+.list-view{position:fixed;inset:0;z-index:40;background:var(--paper);display:none;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:calc(env(safe-area-inset-top,0px) + 120px) 16px calc(env(safe-area-inset-bottom,0px) + 90px);}
+.list-view.open{display:block;}
+.lv-zone{margin-bottom:18px;}
+.lv-zone h4{display:inline-block;background:var(--ink);color:var(--neon);font-size:0.72rem;
+  font-weight:800;letter-spacing:0.06em;border-radius:99px;padding:4px 12px;margin-bottom:8px;}
+.lv-item{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;}
+.lv-item:hover{border-color:var(--ink);}
+.lv-item b{flex:1;min-width:0;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lv-item .lv-id{flex:none;font-size:0.7rem;font-weight:700;color:var(--ink-soft);}
+.lv-bm{flex:none;width:38px;height:38px;margin:-6px -4px -6px -8px;border:0;background:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;}
+.lv-bm svg path{fill:none;stroke:#8A8A86;stroke-width:2;}
+.lv-bm.on svg path{fill:var(--neon);stroke:#111111;}
 .map-hint{position:absolute;left:16px;bottom:18px;z-index:10;font-size:0.68rem;color:var(--ink-soft);
   background:rgba(247,247,245,.9);padding:6px 10px;border-radius:8px;border:1px solid var(--line);}
 
@@ -258,16 +300,25 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
 
 <header>
   <div class="top-row">
-    <div class="searchbox">
-      <input id="searchInput" type="text" placeholder="부스 번호·출판사 검색 (예: A2001, 문학동네)" autocomplete="off" aria-label="부스 검색">
-      <span class="s-icon">⌕</span>
-      <div class="search-results" id="searchResults" role="listbox"></div>
+    <div class="seg" id="viewSeg" role="tablist">
+      <button class="seg-btn active" id="segMap" role="tab" aria-selected="true">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zm0 0v14m6-12v14" fill="none" stroke-width="2" stroke-linejoin="round"/></svg>
+        지도</button>
+      <button class="seg-btn" id="segList" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01" fill="none" stroke-width="2.4" stroke-linecap="round"/></svg>
+        목록</button>
     </div>
+    <button class="menu-btn" id="searchBtn" aria-label="검색 열기">⌕</button>
     <button class="menu-btn" id="menuBtn" aria-label="메뉴" aria-haspopup="true" aria-expanded="false">☰</button>
     <div class="menu-drop" id="menuDrop">
       <button id="tabFilter" class="active">필터·범례</button>
       <button id="tabFav">★ 즐겨찾기<span class="badge" id="favCount">0</span></button>
       <button id="tabWish">📚 위시리스트<span class="badge" id="wishCount">0</span></button>
+    </div>
+    <div class="searchbox" id="searchBox">
+      <input id="searchInput" type="text" placeholder="부스 번호·출판사 검색 (예: A2001, 문학동네)" autocomplete="off" aria-label="부스 검색">
+      <button class="search-close" id="searchClose" aria-label="검색 닫기">✕</button>
+      <div class="search-results" id="searchResults" role="listbox"></div>
     </div>
   </div>
   <div class="chips" id="hallChips">
@@ -317,15 +368,22 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
 <div class="float-ctrl">
   <button id="zoomIn" aria-label="확대">＋</button>
   <button id="zoomOut" aria-label="축소">－</button>
-  <button id="zoomReset" aria-label="전체 보기">⟲</button>
 </div>
 
-<button class="fav-fab" id="favFab" aria-label="즐겨찾기 목록 열기">
-  <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-    <path d="M6 3h12v18l-6-4.5L6 21z" fill="none" stroke="#111111" stroke-width="2" stroke-linejoin="round"/>
-  </svg>
-  <span class="fab-badge" id="fabFavCount">0</span>
-</button>
+<div class="bottom-pill">
+  <button class="bp-fav" id="favFab" aria-label="즐겨찾기 목록 열기">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path d="M6 3h12v18l-6-4.5L6 21z" fill="none" stroke-width="2" stroke-linejoin="round"/>
+    </svg>
+    <span class="fab-badge" id="fabFavCount">0</span>
+  </button>
+  <span class="bp-hall" id="hallNow">전체</span>
+  <button class="bp-reset" id="zoomReset" aria-label="처음으로">⟲</button>
+</div>
+
+<div class="list-view" id="listView">
+  <div id="listContent"></div>
+</div>
 
 <!-- 부스 상세 모달 -->
 <div class="modal-bg" id="modalBg">
@@ -423,8 +481,7 @@ const SPECIAL = [
 
 /* 간격 상수 — 전 존 공통 적용 (기존 다수파 값 기준 통일) */
 const ZONE_LABEL_GAP = 1.5;  /* 존 라벨 배지 하단 ↔ 첫 부스 행 상단 */
-const BOOTH_ROW_GAP  = 1.6;  /* 부스 행 사이 세로 간격 */
-const BOOTH_COL_GAP  = 1.6;  /* 부스 열 사이 가로 간격 */
+const BOOTH_GAP      = 1.6;  /* 부스 카드 사이 간격 — 가로/세로 동일 */
 const ZONE_LABEL_H   = 9;    /* 존 라벨 배지 높이 */
 
 const BLOCKS = [
@@ -470,13 +527,12 @@ const BLOCKS = [
 ];
 
 /* ── 존 블록 간 간격 상수 (전 존 공통) ── */
-const ZONE_ROW_GAP = 15;   /* 세로 인접 존 블록 사이 간격 */
-const ZONE_COL_GAP = 14;   /* 가로 인접 존 블록 사이 간격 */
+const ZONE_GAP     = 14;   /* 존 블록 사이 간격 — 가로/세로 동일 (다수파 값) */
 const CORRIDOR_GAP = 48;   /* 메인 동선(통로) 폭 — 일반 존 간격과 구분 */
 const HALL_PAD     = 14;   /* 홀 아웃박스 = 콘텐츠 바운딩 박스 + 패딩 */
 
 /* 행 단위 연쇄 배치 정의 — "|" = 메인 동선(CORRIDOR_GAP).
-   첫 행만 y0 앵커, 이후 행 y는 ZONE_ROW_GAP으로 체인 계산 */
+   첫 행만 y0 앵커, 이후 행 y는 ZONE_GAP으로 체인 계산 */
 const LAYOUT_ROWS = [
   /* Hall B1 — B400(책마을, x418..550) 우측에서 체인 시작 */
   {hall:"B1", y0:275, x0:564, cols:["B500","B600"]},
@@ -497,16 +553,16 @@ const LAYOUT_ROWS = [
       if(c==="|"){gap=CORRIDOR_GAP;return;}
       x+=gap;
       const z=byLabel[c]; z.x=x; z.y=y;
-      x+=z.w; gap=ZONE_COL_GAP;
+      x+=z.w; gap=ZONE_GAP;
       rowH=Math.max(rowH,z.h);
     });
-    yNext[r.hall]=y+rowH+ZONE_ROW_GAP;
+    yNext[r.hall]=y+rowH+ZONE_GAP;
   });
-  /* B700: B704(x692,w128) 우측에 열 체인, 하단은 B500 행 상단에서 ZONE_ROW_GAP 확보 */
+  /* B700: B704(x692,w128) 우측에 열 체인, 하단은 B500 행 상단에서 ZONE_GAP 확보 */
   const b7=byLabel["B700"];
-  b7.x=692+128+ZONE_COL_GAP;
+  b7.x=692+128+ZONE_GAP;
   b7.y=162;
-  b7.h=(275-ZONE_ROW_GAP)-b7.y;
+  b7.h=(275-ZONE_GAP)-b7.y;
 })();
 
 /* 블록 → 개별 부스 생성 (PDF의 '좌측 소형 그리드 + 우측 대형' 패턴 재현) */
@@ -519,17 +575,17 @@ function buildBooths(){
     const cols = s.cols||2;
     const rows = Math.ceil(s.names.length/cols);
     const smallW = s.big ? s.w*0.55 : s.w;
-    const cw = (smallW-BOOTH_COL_GAP*(cols-1))/cols;
-    const ch = (s.h-BOOTH_ROW_GAP*(rows-1))/rows;
+    const cw = (smallW-BOOTH_GAP*(cols-1))/cols;
+    const ch = (s.h-BOOTH_GAP*(rows-1))/rows;
     s.names.forEach((nm,i)=>{
       const c=i%cols, r=Math.floor(i/cols);
       out.push({id:prefix+(base+start+i), name:nm, cat:"booth",
-        x:s.x+c*(cw+BOOTH_COL_GAP), y:s.y+r*(ch+BOOTH_ROW_GAP), w:cw, h:ch,
+        x:s.x+c*(cw+BOOTH_GAP), y:s.y+r*(ch+BOOTH_GAP), w:cw, h:ch,
         hall:s.hall, block:s.label, desc:`${s.label} 구역 · ${s.hall}홀 일반 부스`});
     });
     if(s.big){
       out.push({id:prefix+(base+start+s.names.length), name:s.big, cat:"booth",
-        x:s.x+smallW+BOOTH_COL_GAP, y:s.y, w:s.w-smallW-BOOTH_COL_GAP, h:s.h,
+        x:s.x+smallW+BOOTH_GAP, y:s.y, w:s.w-smallW-BOOTH_GAP, h:s.h,
         hall:s.hall, block:s.label, big:true, desc:`${s.label} 구역 · ${s.hall}홀 대형 부스`});
     }
   });
@@ -1168,6 +1224,82 @@ renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransfor
     if(e.target.closest(".fav-item") && !e.target.closest(".rm"))
       sidebarEl.classList.remove("open");
   });
+
+  /* ── 우상단 원형 검색 버튼 → 검색 캡슐 펼침 (0.25s ease-out) ── */
+  const searchBox=document.getElementById("searchBox");
+  const searchInputEl=document.getElementById("searchInput");
+  document.getElementById("searchBtn").addEventListener("click",e=>{
+    e.stopPropagation();
+    searchBox.classList.add("open");
+    setTimeout(()=>searchInputEl.focus(),260);
+  });
+  function closeSearch(){
+    searchBox.classList.remove("open");
+    document.getElementById("searchResults").classList.remove("open");
+    searchInputEl.blur();
+  }
+  document.getElementById("searchClose").addEventListener("click",closeSearch);
+  /* 검색 결과 선택 시(기존 핸들러가 부스 포커스 수행) 캡슐도 접기 */
+  document.getElementById("searchResults").addEventListener("click",e=>{
+    if(e.target.closest("button[data-id]")) closeSearch();
+  });
+
+  /* ── [지도|목록] 세그먼트 토글 + 존별 목록 뷰 ── */
+  const segMap=document.getElementById("segMap"), segList=document.getElementById("segList");
+  const listView=document.getElementById("listView"), listContent=document.getElementById("listContent");
+  const BM_PATH='M6 3h12v18l-6-4.5L6 21z';
+  function bmSvg(){return `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="${BM_PATH}"/></svg>`;}
+  function buildListView(){
+    let html="";
+    const item=b=>`<div class="lv-item" data-id="${b.id}">
+      <button class="lv-bm${state.favorites.has(b.id)?" on":""}" data-id="${b.id}" aria-label="즐겨찾기 토글">${bmSvg()}</button>
+      <b>${b.name}</b><span class="lv-id">${b.id.replace("A2402W","A2402")}</span></div>`;
+    /* 존별 섹션 */
+    BLOCKS.forEach(z=>{
+      const items=BOOTHS.filter(b=>b.block===z.label);
+      if(!items.length) return;
+      html+=`<div class="lv-zone"><h4>${z.label} · ${z.hall}홀</h4>${items.map(item).join("")}</div>`;
+    });
+    /* 특별 부스 (시설·통로 제외) */
+    const specials=BOOTHS.filter(b=>!b.block && !b.fac && !b.corridor);
+    if(specials.length)
+      html+=`<div class="lv-zone"><h4>특별 부스</h4>${specials.map(item).join("")}</div>`;
+    listContent.innerHTML=html;
+  }
+  function setView(mode){
+    const isList=mode==="list";
+    segMap.classList.toggle("active",!isList); segMap.setAttribute("aria-selected",String(!isList));
+    segList.classList.toggle("active",isList); segList.setAttribute("aria-selected",String(isList));
+    if(isList) buildListView();
+    listView.classList.toggle("open",isList);
+    document.body.classList.toggle("list-open",isList);
+  }
+  segMap.addEventListener("click",()=>setView("map"));
+  segList.addEventListener("click",()=>setView("list"));
+  listContent.addEventListener("click",e=>{
+    const bm=e.target.closest(".lv-bm");
+    if(bm){
+      toggleFav(bm.dataset.id);                       /* 기존 즐겨찾기 로직 그대로 */
+      bm.classList.toggle("on",state.favorites.has(bm.dataset.id));
+      return;
+    }
+    const it=e.target.closest(".lv-item");
+    if(it){ setView("map"); focusBooth(it.dataset.id); }
+  });
+
+  /* ── 하단 바: 현재 보고 있는 홀 표시 (뷰포트 중심 좌표 기준) ── */
+  const hallNow=document.getElementById("hallNow");
+  function updateHallNow(){
+    const vb=svg.viewBox.baseVal;
+    const cx=(vb.width/2-state.tx)/state.scale, cy=(vb.height/2-state.ty)/state.scale;
+    const inR=r=>cx>=r.x&&cx<=r.x+r.w&&cy>=r.y&&cy<=r.y+r.h;
+    hallNow.textContent=inR(HALL_BOUNDS.A)?"A홀":inR(HALL_BOUNDS.B1)?"B1홀":"전체";
+  }
+  svg.addEventListener("pointerup",updateHallNow);
+  svg.addEventListener("wheel",updateHallNow,{passive:true});
+  ["zoomIn","zoomOut","zoomReset"].forEach(id=>document.getElementById(id).addEventListener("click",updateHallNow));
+  document.querySelectorAll("#hallChips .chip").forEach(c=>c.addEventListener("click",updateHallNow));
+  updateHallNow();
 
   /* ── 시트 핸들 아래로 스와이프 → 닫기 ── */
   const handle=document.getElementById("mToggle");
