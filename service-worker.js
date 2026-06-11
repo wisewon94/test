@@ -1,7 +1,7 @@
 /* 2026 서울국제도서전 맵 — Service Worker (cache-first)
    HTML을 수정해 배포할 때는 아래 CACHE_NAME 버전만 올리면
    activate 단계에서 구버전 캐시가 정리되고 새 파일이 캐싱됩니다. */
-const CACHE_NAME = 'sibf-map-v14';
+const CACHE_NAME = 'sibf-map-v15';
 const ASSETS = [
   '/',
   '/index.html',

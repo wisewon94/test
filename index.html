@@ -193,6 +193,9 @@ body.list-open .float-ctrl{display:none;}
   -webkit-overflow-scrolling:touch;
   padding:calc(env(safe-area-inset-top,0px) + 120px) 16px calc(env(safe-area-inset-bottom,0px) + 90px);}
 .list-view.open{display:block;}
+.lv-filter{margin-bottom:20px;padding-bottom:18px;border-bottom:1.5px dashed var(--line);}
+.lv-filter h3{font-size:0.72rem;letter-spacing:0.12em;color:var(--ink-soft);
+  margin:0 0 10px;text-transform:uppercase;}
 .lv-zone{margin-bottom:18px;}
 .lv-zone h4{display:inline-block;background:var(--ink);color:var(--neon);font-size:0.72rem;
   font-weight:800;letter-spacing:0.06em;border-radius:99px;padding:4px 12px;margin-bottom:8px;}
@@ -302,8 +305,7 @@ body.list-open .float-ctrl{display:none;}
     <button class="menu-btn" id="searchBtn" aria-label="검색 열기">⌕</button>
     <button class="menu-btn" id="menuBtn" aria-label="메뉴" aria-haspopup="true" aria-expanded="false">☰</button>
     <div class="menu-drop" id="menuDrop">
-      <button id="tabFilter" class="active">필터·범례</button>
-      <button id="tabFav">★ 즐겨찾기<span class="badge" id="favCount">0</span></button>
+      <button id="tabFav" class="active">★ 즐겨찾기<span class="badge" id="favCount">0</span></button>
       <button id="tabWish">📚 위시리스트<span class="badge" id="wishCount">0</span></button>
     </div>
     <div class="searchbox" id="searchBox">
@@ -323,16 +325,7 @@ body.list-open .float-ctrl{display:none;}
   <aside id="sidebar">
     <button class="m-toggle" id="mToggle" aria-label="패널 닫기"></button>
 
-    <div class="panel active" id="panelFilter">
-      <h3>카테고리 필터</h3>
-      <div class="filters" id="filterList"></div>
-      <div class="f-actions">
-        <button id="btnAllOn">전체 켜기</button>
-        <button id="btnAllOff">전체 끄기</button>
-      </div>
-    </div>
-
-    <div class="panel" id="panelFav">
+    <div class="panel active" id="panelFav">
       <h3>즐겨찾기한 부스</h3>
       <div class="fav-list" id="favList"></div>
     </div>
@@ -369,6 +362,14 @@ body.list-open .float-ctrl{display:none;}
 </div>
 
 <div class="list-view" id="listView">
+  <div class="lv-filter">
+    <h3>카테고리 필터·범례</h3>
+    <div class="filters" id="filterList"></div>
+    <div class="f-actions">
+      <button id="btnAllOn">전체 켜기</button>
+      <button id="btnAllOff">전체 끄기</button>
+    </div>
+  </div>
   <div id="listContent"></div>
 </div>
 
@@ -1129,15 +1130,13 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")modalBg.classList.re
 /* ============================================================
    11. 탭 / 모바일 패널
    ============================================================ */
-const tabs={filter:[document.getElementById("tabFilter"),document.getElementById("panelFilter")],
-            fav:[document.getElementById("tabFav"),document.getElementById("panelFav")],
+const tabs={fav:[document.getElementById("tabFav"),document.getElementById("panelFav")],
             wish:[document.getElementById("tabWish"),document.getElementById("panelWish")]};
 function switchTab(name){
   Object.entries(tabs).forEach(([k,[t,p]])=>{
     t.classList.toggle("active",k===name); p.classList.toggle("active",k===name);
   });
 }
-tabs.filter[0].onclick=()=>switchTab("filter");
 tabs.fav[0].onclick=()=>{switchTab("fav");document.getElementById("sidebar").classList.add("open");};
 tabs.wish[0].onclick=()=>{switchTab("wish");document.getElementById("sidebar").classList.add("open");};
 document.getElementById("mToggle").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
@@ -1162,7 +1161,7 @@ renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransfor
     menuBtn.setAttribute("aria-expanded",open?"true":"false");
   });
   /* 항목 탭 → 메뉴 닫고 바텀시트 열기 (해당 패널 전환은 기존 onclick이 수행) */
-  ["tabFilter","tabFav","tabWish"].forEach(id=>{
+  ["tabFav","tabWish"].forEach(id=>{
     document.getElementById(id).addEventListener("click",()=>{
       closeMenu(); sidebarEl.classList.add("open");
     });
@@ -1241,18 +1240,24 @@ renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransfor
     const item=b=>`<div class="lv-item" data-id="${b.id}">
       <button class="lv-bm${state.favorites.has(b.id)?" on":""}" data-id="${b.id}" aria-label="즐겨찾기 토글">${bmSvg()}</button>
       <b>${b.name}</b><span class="lv-id">${b.id.replace("A2402W","A2402")}</span></div>`;
-    /* 존별 섹션 */
+    /* 존별 섹션 — 카테고리 필터(activeFilters) 반영 */
     BLOCKS.forEach(z=>{
-      const items=BOOTHS.filter(b=>b.block===z.label);
+      const items=BOOTHS.filter(b=>b.block===z.label && state.activeFilters.has(b.cat));
       if(!items.length) return;
       html+=`<div class="lv-zone"><h4>${z.label} · ${z.hall}홀</h4>${items.map(item).join("")}</div>`;
     });
-    /* 특별 부스 (시설·통로 제외) */
-    const specials=BOOTHS.filter(b=>!b.block && !b.fac && !b.corridor);
+    /* 특별 부스 (시설·통로 제외, 필터 반영) */
+    const specials=BOOTHS.filter(b=>!b.block && !b.fac && !b.corridor && state.activeFilters.has(b.cat));
     if(specials.length)
       html+=`<div class="lv-zone"><h4>특별 부스</h4>${specials.map(item).join("")}</div>`;
-    listContent.innerHTML=html;
+    listContent.innerHTML=html||`<div class="empty-note">표시할 부스가 없습니다.<br>위 필터에서 카테고리를 켜 주세요.</div>`;
   }
+  /* 필터·범례 조작 시 목록 즉시 갱신 (지도 dim 처리는 기존 핸들러 수행) */
+  ["filterList","btnAllOn","btnAllOff"].forEach(id=>{
+    document.getElementById(id).addEventListener("click",()=>{
+      if(listView.classList.contains("open")) buildListView();
+    });
+  });
   function setView(mode){
     const isList=mode==="list";
     segMap.classList.toggle("active",!isList); segMap.setAttribute("aria-selected",String(!isList));
