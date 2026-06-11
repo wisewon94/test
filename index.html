@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>2026 서울국제도서전 · 디지털 부스 지도 v2</title>
 <link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,7 +19,7 @@
   --c-event:#F47920; --c-cafe:#8E7CC3; --c-toilet:#7A8B8F;
   --fav:#C8102E; --wish:#1A6E5A; --goods:#B05A1E;
   --coral:#D97757; --coral-deep:#993C1D; --coral-soft:#FAECE7; --coral-mid:#F5C4B3; --coral-text:#FBF7F2;
-  --radius:10px; --sidebar-w:310px; --header-h:58px; --bar-h:64px;
+  --radius:10px; --sidebar-w:310px; --header-h:66px; --bar-h:74px;
   font-size:15px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -147,8 +147,9 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
   display:flex;align-items:center;justify-content:space-between;gap:10px;
   padding:0 14px env(safe-area-inset-bottom,0px) 16px;
   background:var(--coral);border-top:2px solid var(--coral-deep);color:var(--coral-text);}
-.bb-brand{min-width:0;}
-.bb-brand b{display:block;font-size:0.95rem;letter-spacing:-0.02em;
+.bb-brand{min-width:0;display:flex;align-items:center;gap:9px;}
+.bb-emoji{font-size:1.55rem;line-height:1;flex:none;}
+.bb-brand b{display:block;font-size:1.12rem;letter-spacing:-0.02em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .bb-ctrl{display:flex;gap:8px;flex:none;}
 .bb-ctrl button{width:50px;height:50px;border:1.5px solid var(--coral-deep);border-radius:12px;
@@ -231,9 +232,10 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
 
 /* ── 모바일 ── */
 @media (max-width:760px){
-  :root{--header-h:52px;--bar-h:60px;}
+  :root{--header-h:62px;--bar-h:70px;}
   .map-hint{display:none;}
-  .bb-brand b{font-size:0.8rem;}
+  .bb-emoji{font-size:1.4rem;}
+  .bb-brand b{font-size:0.98rem;}
   .bb-ctrl button{width:46px;height:46px;font-size:1.35rem;}
 }
 @media (prefers-reduced-motion:reduce){.booth.pulse{animation:none;}aside{transition:none;}}
@@ -293,7 +295,7 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
 </div>
 
 <footer class="bottom-bar">
-  <div class="bb-brand"><b>📖 2026 서울국제도서전 MAP</b></div>
+  <div class="bb-brand"><span class="bb-emoji">📖</span><b>2026 서울국제도서전 MAP</b></div>
   <div class="bb-ctrl">
     <button id="zoomIn" aria-label="확대">＋</button>
     <button id="zoomOut" aria-label="축소">－</button>
