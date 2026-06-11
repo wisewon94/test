@@ -179,16 +179,18 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
   background:#fff;color:var(--ink);font-size:1.3rem;font-weight:700;cursor:pointer;
   box-shadow:0 2px 10px rgba(17,17,17,.1);}
 .float-ctrl button:hover{background:var(--ink);color:#fff;}
-body.list-open .float-ctrl{display:none;}
+/* 북마크: 줌 스택 최상단의 네온 그린 원형 버튼 */
+.float-ctrl .fc-fav{position:relative;background:var(--neon);display:flex;align-items:center;justify-content:center;}
+.float-ctrl .fc-fav:hover{background:var(--neon);filter:brightness(.92);}
+.fc-fav svg path{stroke:#111111;}
+body.list-open .float-ctrl,
+body.list-open .bottom-pill{display:none;}
 
-/* ── 하단 플로팅 바 (블랙 캡슐: 북마크 + 현재 홀 + 리셋) ── */
+/* ── 하단 플로팅 바 (블랙 캡슐: 현재 홀 + 리셋) ── */
 .bottom-pill{position:fixed;left:50%;transform:translateX(-50%);
   bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:44;
-  height:54px;display:flex;align-items:center;gap:14px;padding:0 8px 0 5px;
+  height:54px;display:flex;align-items:center;gap:6px;padding:0 8px 0 20px;
   background:var(--ink);border-radius:999px;box-shadow:0 4px 16px rgba(17,17,17,.28);}
-.bp-fav{position:relative;flex:none;width:44px;height:44px;border:0;border-radius:50%;
-  background:var(--neon);cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.bp-fav svg path{stroke:#111111;}
 .fab-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;
   border-radius:99px;background:var(--neon);border:1.5px solid var(--ink);
   font-size:0.68rem;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:center;}
@@ -366,17 +368,17 @@ body.list-open .float-ctrl{display:none;}
 </div>
 
 <div class="float-ctrl">
-  <button id="zoomIn" aria-label="확대">＋</button>
-  <button id="zoomOut" aria-label="축소">－</button>
-</div>
-
-<div class="bottom-pill">
-  <button class="bp-fav" id="favFab" aria-label="즐겨찾기 목록 열기">
+  <button class="fc-fav" id="favFab" aria-label="즐겨찾기 목록 열기">
     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
       <path d="M6 3h12v18l-6-4.5L6 21z" fill="none" stroke-width="2" stroke-linejoin="round"/>
     </svg>
     <span class="fab-badge" id="fabFavCount">0</span>
   </button>
+  <button id="zoomIn" aria-label="확대">＋</button>
+  <button id="zoomOut" aria-label="축소">－</button>
+</div>
+
+<div class="bottom-pill">
   <span class="bp-hall" id="hallNow">전체</span>
   <button class="bp-reset" id="zoomReset" aria-label="처음으로">⟲</button>
 </div>
