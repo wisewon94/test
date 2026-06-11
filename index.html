@@ -985,13 +985,13 @@ renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransfor
   scrim.addEventListener("click",()=>sidebarEl.classList.remove("open"));
 })();
 
-/* ── 모바일 초기 뷰: 지도 중앙 기준 5배 확대 상태로 시작 ── */
+/* ── 모바일 초기 뷰: A홀 입구 부근(700,1020) 기준 5배 확대 상태로 시작 ── */
 (function(){
   if(!window.matchMedia("(max-width:760px)").matches) return;
-  const vb=svg.viewBox.baseVal, s=5;
+  const vb=svg.viewBox.baseVal, s=5, cx=700, cy=1020;
   state.scale=s;
-  state.tx=vb.width/2*(1-s);
-  state.ty=vb.height/2*(1-s);
+  state.tx=vb.width/2-s*cx;
+  state.ty=vb.height/2-s*cy;
   applyTransform();
 })();
 </script>
