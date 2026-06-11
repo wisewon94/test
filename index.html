@@ -23,10 +23,15 @@
   font-size:15px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;margin:0;overflow:hidden;}
+/* 루트 캔버스 배경 — 하단 safe area(홈 인디케이터 뒤)와 오버스크롤 바운스 영역까지
+   페이지 배경색이 끊김 없이 이어지도록 html에 명시 */
+html{background:var(--paper-deep);}
+html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none;}
 body{
-  height:100vh;   /* 폴백 */
-  height:100dvh;  /* iOS Safari: 주소창 제외 실제 가시 높이 */
+  height:100vh;                  /* 폴백 */
+  height:-webkit-fill-available; /* 구형 iOS Safari */
+  height:100dvh;                 /* 동적 뷰포트: 주소창 제외 실제 가시 높이 */
+  min-height:100dvh;
   font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
   background:var(--paper-deep); color:var(--ink);
 }
@@ -80,80 +85,13 @@ header{position:fixed;top:0;left:0;right:0;z-index:45;
 /* ── 레이아웃 (뷰포트에 직접 고정 — 지도 배경이 safe-area 포함 화면 끝까지) ── */
 .layout{position:fixed;inset:0;display:flex;}
 
-/* ── 원형 플로팅 메뉴 버튼 + 드롭다운 ── */
+/* ── 원형 플로팅 버튼 (검색) ── */
 .menu-btn{flex:none;width:46px;height:46px;border:1.5px solid var(--ink);border-radius:50%;
   background:#fff;color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer;
   box-shadow:0 2px 10px rgba(17,17,17,.1);pointer-events:auto;}
-.menu-btn:hover,.menu-btn[aria-expanded="true"]{background:var(--ink);color:#fff;}
-.menu-drop{position:absolute;top:calc(100% + 8px);right:0;min-width:235px;display:none;flex-direction:column;
-  background:#fff;border:1.5px solid var(--ink);border-radius:14px;padding:6px;
-  box-shadow:0 14px 34px rgba(17,17,17,.2);pointer-events:auto;}
-.menu-drop.open{display:flex;}
-.menu-drop button{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:0;border-radius:9px;
-  background:none;font:inherit;font-size:0.92rem;font-weight:700;color:var(--ink);cursor:pointer;text-align:left;
-  transition:background .25s ease-out;}
-.menu-drop button:hover{background:rgba(1,255,1,.14);}
-.menu-drop button.active{background:rgba(1,255,1,.2);}
-.menu-drop .badge{margin-left:auto;min-width:20px;text-align:center;padding:2px 7px;border-radius:99px;
-  font-size:0.7rem;font-weight:800;background:var(--neon);color:var(--ink);}
-.menu-drop button.active .badge{background:var(--ink);color:var(--neon);}
+.menu-btn:hover{background:var(--ink);color:#fff;}
 
-/* ── 바텀시트 (필터·즐겨찾기·위시리스트 패널) ── */
-aside{position:fixed;left:0;right:0;bottom:0;max-height:62%;background:#fff;
-  border-top:2px solid var(--ink);border-radius:18px 18px 0 0;display:flex;flex-direction:column;
-  transform:translateY(102%);transition:transform .25s ease-out;z-index:47;
-  box-shadow:0 -10px 32px rgba(17,17,17,.18);padding-bottom:env(safe-area-inset-bottom,0px);}
-aside.open{transform:translateY(0);}
-@media (min-width:761px){aside{left:50%;right:auto;width:480px;margin-left:-240px;}}
-.m-toggle{display:block;width:100%;min-height:44px;padding:14px 0 10px;border:0;background:none;cursor:pointer;flex:none;
-  touch-action:none;}
-.m-toggle::before{content:"";display:block;width:44px;height:4px;border-radius:99px;
-  background:var(--line);margin:0 auto;}
-.scrim{position:fixed;inset:0;background:rgba(17,17,17,.35);opacity:0;pointer-events:none;
-  transition:opacity .25s ease-out;z-index:46;}
-aside.open ~ .scrim{opacity:1;pointer-events:auto;}
-.panel{flex:1;overflow:auto;padding:16px;display:none;}
-.panel.active{display:block;}
-.panel h3{font-size:0.72rem;letter-spacing:0.12em;color:var(--ink-soft);margin:6px 0 10px;text-transform:uppercase;}
-
-.filters{display:flex;flex-direction:column;gap:8px;}
-.f-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--line);
-  border-radius:var(--radius);background:#fff;font:inherit;font-size:0.88rem;cursor:pointer;text-align:left;
-  transition:border-color .15s,opacity .15s;}
-.f-chip .swatch{width:16px;height:16px;border-radius:5px;border:1px solid rgba(0,0,0,.18);flex:none;}
-.f-chip .cnt{margin-left:auto;font-size:0.72rem;color:var(--ink-soft);font-weight:700;}
-.f-chip.off{opacity:.38;}
-.f-chip.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink) inset;background:var(--neon);}
-.f-actions{display:flex;gap:8px;margin-top:12px;}
-.f-actions button{flex:1;padding:8px 0;border:1.5px solid var(--ink);border-radius:999px;background:none;
-  font:inherit;font-size:0.78rem;font-weight:700;cursor:pointer;}
-.f-actions button:hover{background:var(--ink);color:var(--paper);}
-
-.fav-list,.wish-groups{display:flex;flex-direction:column;gap:8px;}
-.fav-item{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:var(--radius);
-  background:#fff;padding:10px 12px;cursor:pointer;}
-.fav-item:hover{border-color:var(--ink);}
-.fav-item .info{flex:1;min-width:0;}
-.fav-item .info b{display:block;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.fav-item .info span{font-size:0.7rem;color:var(--ink-soft);}
-.fav-item .rm{border:0;background:none;cursor:pointer;color:var(--ink-soft);font-size:1rem;padding:4px;}
-.fav-item .rm:hover{color:var(--fav);}
-.empty-note{color:var(--ink-soft);font-size:0.84rem;line-height:1.65;padding:8px 2px;}
-
-.wish-group{border:1.5px solid var(--line);border-radius:var(--radius);background:#fff;overflow:hidden;}
-.wish-group .wg-head{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;
-  border-bottom:1px dashed var(--line);}
-.wish-group .wg-head:hover{background:var(--paper-deep);}
-.wish-group .wg-head b{font-size:0.86rem;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.wish-group .wg-head span{font-size:0.68rem;color:var(--ink-soft);font-weight:700;}
-.wish-group ul{list-style:none;padding:6px 12px 10px;}
-.wish-group li{display:flex;align-items:center;gap:8px;font-size:0.84rem;padding:4px 0;color:var(--ink);}
-.wish-group li.book::before{content:"📖";font-size:0.78rem;}
-.wish-group li.goods::before{content:"🎁";font-size:0.78rem;}
-.wish-group li .del{margin-left:auto;border:0;background:none;cursor:pointer;color:var(--ink-soft);font-size:0.85rem;}
-.wish-group li .del:hover{color:var(--fav);}
-.storage-note{margin-top:14px;font-size:0.68rem;color:var(--ink-soft);line-height:1.5;
-  border-top:1px dashed var(--line);padding-top:10px;}
+.empty-note{color:var(--ink-soft);font-size:0.9rem;line-height:1.65;padding:24px 8px;text-align:center;}
 
 /* ── 지도 ── */
 .map-wrap{flex:1;position:relative;overflow:hidden;background:var(--paper-deep);touch-action:none;}
@@ -162,7 +100,6 @@ aside.open ~ .scrim{opacity:1;pointer-events:auto;}
 svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;}
 .booth{stroke:var(--booth-line);stroke-width:0.45;transition:opacity .2s;cursor:pointer;}
 .booth:hover{filter:brightness(0.95);}
-.booth-g.dim{opacity:.12;}
 .booth.favored{stroke:var(--neon);stroke-width:1.2;}
 .booth.pulse{animation:pulse 1.5s ease-out;}
 @keyframes pulse{
@@ -179,23 +116,29 @@ svg text{user-select:none;pointer-events:none;text-rendering:geometricPrecision;
   background:#fff;color:var(--ink);font-size:1.3rem;font-weight:700;cursor:pointer;
   box-shadow:0 2px 10px rgba(17,17,17,.1);}
 .float-ctrl button:hover{background:var(--ink);color:#fff;}
-/* 북마크: 줌 스택 최상단의 네온 그린 원형 버튼 */
+/* 북마크 카운터: 줌 스택 최상단의 네온 그린 원형 버튼 (블랙 아이콘) */
 .float-ctrl .fc-fav{position:relative;background:var(--neon);display:flex;align-items:center;justify-content:center;}
 .float-ctrl .fc-fav:hover{background:var(--neon);filter:brightness(.92);}
 .fc-fav svg path{stroke:#111111;}
-body.list-open .float-ctrl{display:none;}
 .fab-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;
   border-radius:99px;background:var(--neon);border:1.5px solid var(--ink);
   font-size:0.68rem;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:center;}
+body.list-open .float-ctrl{display:none;}
 
-/* ── 목록 뷰 (존별 섹션 스크롤 리스트) ── */
+/* ── 목록 뷰 (탭 + 존별 섹션 스크롤 리스트) ── */
 .list-view{position:fixed;inset:0;z-index:40;background:var(--paper);display:none;overflow-y:auto;
   -webkit-overflow-scrolling:touch;
-  padding:calc(env(safe-area-inset-top,0px) + 120px) 16px calc(env(safe-area-inset-bottom,0px) + 90px);}
+  padding:calc(env(safe-area-inset-top,0px) + 120px) 16px calc(env(safe-area-inset-bottom,0px) + 28px);}
 .list-view.open{display:block;}
-.lv-filter{margin-bottom:20px;padding-bottom:18px;border-bottom:1.5px dashed var(--line);}
-.lv-filter h3{font-size:0.72rem;letter-spacing:0.12em;color:var(--ink-soft);
-  margin:0 0 10px;text-transform:uppercase;}
+/* 목록 탭 [전체|즐겨찾기|위시리스트] */
+.lv-tabs{display:flex;gap:8px;margin-bottom:18px;}
+.lv-tab{flex:1;min-height:40px;border:1.5px solid var(--ink);border-radius:999px;background:#fff;
+  font:inherit;font-size:0.86rem;font-weight:700;color:var(--ink);cursor:pointer;
+  transition:background .25s ease-out;}
+.lv-tab.active{background:var(--neon);}
+.lv-wishn{flex:none;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:var(--neon);
+  border:1px solid var(--ink);font-size:0.68rem;font-weight:800;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;}
 .lv-zone{margin-bottom:18px;}
 .lv-zone h4{display:inline-block;background:var(--ink);color:var(--neon);font-size:0.72rem;
   font-weight:800;letter-spacing:0.06em;border-radius:99px;padding:4px 12px;margin-bottom:8px;}
@@ -215,7 +158,7 @@ body.list-open .float-ctrl{display:none;}
 .modal-bg{position:fixed;inset:0;background:rgba(23,21,15,.45);display:none;align-items:center;
   justify-content:center;z-index:50;padding:20px;}
 .modal-bg.open{display:flex;}
-.modal{width:100%;max-width:400px;max-height:86vh;overflow:auto;background:#fff;
+.modal{width:100%;max-width:400px;max-height:86vh;max-height:86dvh;overflow:auto;background:#fff;
   border:2px solid var(--ink);border-radius:16px;padding:22px;box-shadow:0 18px 50px rgba(17,17,17,.3);}
 .modal .top-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
 .cat-badge{display:inline-flex;align-items:center;gap:7px;font-size:0.7rem;font-weight:700;
@@ -287,7 +230,7 @@ body.list-open .float-ctrl{display:none;}
   .map-hint{display:none;}
   .searchbox{max-width:none;}
 }
-@media (prefers-reduced-motion:reduce){.booth.pulse{animation:none;}aside{transition:none;}}
+@media (prefers-reduced-motion:reduce){.booth.pulse{animation:none;}.searchbox,.list-view,.chip,.lv-tab{transition:none;}}
 </style>
 </head>
 <body>
@@ -303,11 +246,6 @@ body.list-open .float-ctrl{display:none;}
         목록</button>
     </div>
     <button class="menu-btn" id="searchBtn" aria-label="검색 열기">⌕</button>
-    <button class="menu-btn" id="menuBtn" aria-label="메뉴" aria-haspopup="true" aria-expanded="false">☰</button>
-    <div class="menu-drop" id="menuDrop">
-      <button id="tabFav" class="active">★ 즐겨찾기<span class="badge" id="favCount">0</span></button>
-      <button id="tabWish">📚 위시리스트<span class="badge" id="wishCount">0</span></button>
-    </div>
     <div class="searchbox" id="searchBox">
       <input id="searchInput" type="text" placeholder="부스 번호·출판사 검색 (예: A2001, 문학동네)" autocomplete="off" aria-label="부스 검색">
       <button class="search-close" id="searchClose" aria-label="검색 닫기">✕</button>
@@ -322,31 +260,12 @@ body.list-open .float-ctrl{display:none;}
 </header>
 
 <div class="layout">
-  <aside id="sidebar">
-    <button class="m-toggle" id="mToggle" aria-label="패널 닫기"></button>
-
-    <div class="panel active" id="panelFav">
-      <h3>즐겨찾기한 부스</h3>
-      <div class="fav-list" id="favList"></div>
-    </div>
-
-    <div class="panel" id="panelWish">
-      <h3>부스별 쇼핑 리스트</h3>
-      <div class="wish-subhead">📚 사고 싶은 책</div>
-      <div class="wish-groups" id="wishGroupsBook"></div>
-      <div class="wish-subhead">🎁 사고 싶은 굿즈</div>
-      <div class="wish-groups" id="wishGroupsGoods"></div>
-      <div class="storage-note" id="storageNote"></div>
-    </div>
-  </aside>
-
   <div class="map-wrap" id="mapWrap">
     <svg id="map" viewBox="0 0 1024 1170" xmlns="http://www.w3.org/2000/svg" aria-label="부스 배치도">
       <g id="viewport"></g>
     </svg>
     <div class="map-hint">휠·핀치 확대 / 드래그 이동 / 부스 클릭 → 상세·위시리스트 / 우상단 북마크 → 즐겨찾기</div>
   </div>
-  <div class="scrim" id="scrim"></div>
 </div>
 
 <div class="float-ctrl">
@@ -362,13 +281,10 @@ body.list-open .float-ctrl{display:none;}
 </div>
 
 <div class="list-view" id="listView">
-  <div class="lv-filter">
-    <h3>카테고리 필터·범례</h3>
-    <div class="filters" id="filterList"></div>
-    <div class="f-actions">
-      <button id="btnAllOn">전체 켜기</button>
-      <button id="btnAllOff">전체 끄기</button>
-    </div>
+  <div class="lv-tabs" id="lvTabs">
+    <button class="lv-tab active" data-tab="all">전체</button>
+    <button class="lv-tab" data-tab="fav">즐겨찾기</button>
+    <button class="lv-tab" data-tab="wish">위시리스트</button>
   </div>
   <div id="listContent"></div>
 </div>
@@ -629,7 +545,6 @@ const state = {
   wishlist: Store.get("sibf26_wish")||{},      // {boothId:[책제목,...]}
   goods: Store.get("sibf26_goods")||{},        // {boothId:[굿즈명,...]} — 책과 분리 저장
   sns: Store.get("sibf26_sns")||{},            // {boothId:{instagram,youtube,twitter}}
-  activeFilters: new Set(Object.keys(CATEGORIES)),
   scale:1, tx:0, ty:0, minScale:0.45, maxScale:14,
 };
 const boothById = id => BOOTHS.find(b=>b.id===id);
@@ -757,7 +672,6 @@ function renderMap(){
     /* 📖 책 / 🎁 굿즈 위시리스트 개수 배지 (부스 좌하단, 나란히 표시) */
     drawWishBadges(g,b);
   });
-  applyFilterToMap();
 }
 
 /* 책·굿즈 위시 배지를 부스 좌하단에 나란히 그림 */
@@ -876,33 +790,6 @@ function focusBooth(id,openDetail=false){
 }
 
 /* ============================================================
-   6. 필터
-   ============================================================ */
-const filterList=document.getElementById("filterList");
-function renderFilters(){
-  filterList.innerHTML="";
-  Object.entries(CATEGORIES).forEach(([key,c])=>{
-    const cnt=BOOTHS.filter(b=>b.cat===key).length;
-    const btn=document.createElement("button");
-    btn.className="f-chip "+(state.activeFilters.has(key)?"on":"off");
-    btn.innerHTML=`<span class="swatch" style="background:${c.color}"></span><span>${c.name}</span><span class="cnt">${cnt}</span>`;
-    btn.onclick=()=>{
-      state.activeFilters.has(key)?state.activeFilters.delete(key):state.activeFilters.add(key);
-      renderFilters();applyFilterToMap();
-    };
-    filterList.appendChild(btn);
-  });
-}
-function applyFilterToMap(){
-  BOOTHS.forEach(b=>{
-    const g=viewport.querySelector(`.booth-g[data-id="${CSS.escape(b.id)}"]`);
-    if(g) g.classList.toggle("dim",!state.activeFilters.has(b.cat));
-  });
-}
-document.getElementById("btnAllOn").onclick=()=>{state.activeFilters=new Set(Object.keys(CATEGORIES));renderFilters();applyFilterToMap();};
-document.getElementById("btnAllOff").onclick=()=>{state.activeFilters.clear();renderFilters();applyFilterToMap();};
-
-/* ============================================================
    7. 검색
    ============================================================ */
 const searchInput=document.getElementById("searchInput"), searchResults=document.getElementById("searchResults");
@@ -921,92 +808,43 @@ searchInput.addEventListener("input",()=>{
 document.addEventListener("click",e=>{if(!e.target.closest(".searchbox"))searchResults.classList.remove("open");});
 
 /* ============================================================
-   8. 즐겨찾기 (☆ 토글)
+   8. 즐겨찾기 (북마크 토글) — 표시는 목록 뷰가 담당
    ============================================================ */
-const favList=document.getElementById("favList"), favCount=document.getElementById("favCount");
+/* 목록 뷰가 열려 있으면 갱신하는 훅 (IIFE에서 실제 구현 주입) */
+let refreshListView=()=>{};
 function toggleFav(id){
   state.favorites.has(id)?state.favorites.delete(id):state.favorites.add(id);
   Store.set("sibf26_favs",[...state.favorites]);
-  refreshBoothMark(id); renderFavList(); syncModalFav(id);
-}
-function renderFavList(){
-  favCount.textContent=state.favorites.size;
-  if(!state.favorites.size){
-    favList.innerHTML=`<div class="empty-note">지도의 부스 우상단 <b>북마크</b>를 누르면<br>즐겨찾기에 추가됩니다.</div>`;return;
-  }
-  favList.innerHTML="";
-  [...state.favorites].map(boothById).filter(Boolean).sort((a,b)=>a.id.localeCompare(b.id)).forEach(b=>{
-    const item=document.createElement("div");
-    item.className="fav-item";
-    item.innerHTML=`<span class="sr-dot" style="background:${CATEGORIES[b.cat].color}"></span>
-      <div class="info"><b>${b.name}</b><span>${b.id.replace("A2402W","A2402")} · ${b.hall}홀</span></div>
-      <button class="rm" aria-label="삭제">✕</button>`;
-    item.onclick=e=>{
-      if(e.target.closest(".rm"))return;
-      focusBooth(b.id);
-      if(window.innerWidth<=760)document.getElementById("sidebar").classList.remove("open");
-    };
-    item.querySelector(".rm").onclick=()=>toggleFav(b.id);
-    favList.appendChild(item);
-  });
+  refreshBoothMark(id); syncModalFav(id); refreshListView();
 }
 
 /* ============================================================
    9. 위시리스트 (부스별 사고 싶은 책 / 굿즈 — 분리 저장)
    ============================================================ */
 const WISH_TYPES={
-  book: {storeKey:"sibf26_wish",  data:()=>state.wishlist, container:"wishGroupsBook",  unit:"권", icon:"📖",
-         empty:"부스를 클릭한 뒤 상세 창에서<br><b>사고 싶은 책 제목</b>을 적어보세요."},
-  goods:{storeKey:"sibf26_goods", data:()=>state.goods,    container:"wishGroupsGoods", unit:"개", icon:"🎁",
-         empty:"부스 상세 창에서 <b>굿즈 이름</b>을 적어보세요.<br>엽서·키링·에코백 등 책과 따로 정리됩니다."},
+  book: {storeKey:"sibf26_wish",  data:()=>state.wishlist},
+  goods:{storeKey:"sibf26_goods", data:()=>state.goods},
 };
-const wishCount=document.getElementById("wishCount");
 function saveWishType(type){Store.set(WISH_TYPES[type].storeKey, WISH_TYPES[type].data());}
 function addWish(type,id,title){
   title=title.trim(); if(!title)return;
   const d=WISH_TYPES[type].data();
   (d[id]=d[id]||[]).push(title);
-  saveWishType(type); refreshBoothMark(id); renderWishGroups(); renderModalWish(id);
+  saveWishType(type); refreshBoothMark(id); refreshListView(); renderModalWish(id);
 }
 function removeWish(type,id,idx){
   const d=WISH_TYPES[type].data();
   if(!d[id])return;
   d[id].splice(idx,1);
   if(!d[id].length) delete d[id];
-  saveWishType(type); refreshBoothMark(id); renderWishGroups(); renderModalWish(id);
+  saveWishType(type); refreshBoothMark(id); refreshListView(); renderModalWish(id);
 }
-function totalWish(){
-  return Object.keys(WISH_TYPES).reduce((sum,t)=>
-    sum+Object.values(WISH_TYPES[t].data()).reduce((a,v)=>a+v.length,0),0);
+/* 부스에 위시리스트 항목(책 또는 굿즈)이 있는지 */
+function hasWish(id){
+  return (state.wishlist[id]||[]).length>0 || (state.goods[id]||[]).length>0;
 }
-function renderWishGroups(){
-  wishCount.textContent=totalWish();
-  Object.entries(WISH_TYPES).forEach(([type,cfg])=>{
-    const box=document.getElementById(cfg.container);
-    const d=cfg.data();
-    const ids=Object.keys(d);
-    if(!ids.length){
-      box.innerHTML=`<div class="empty-note">${cfg.empty}</div>`;return;
-    }
-    box.innerHTML="";
-    ids.map(boothById).filter(Boolean).sort((a,b)=>a.id.localeCompare(b.id)).forEach(b=>{
-      const items=d[b.id];
-      const grp=document.createElement("div");
-      grp.className="wish-group";
-      grp.innerHTML=`<div class="wg-head">
-          <span class="sr-dot" style="background:${CATEGORIES[b.cat].color}"></span>
-          <b>${b.name}</b><span>${b.id.replace("A2402W","A2402")} · ${items.length}${cfg.unit}</span></div>
-        <ul>${items.map((t,i)=>`<li class="${type}">${t}<button class="del" data-i="${i}" aria-label="삭제">✕</button></li>`).join("")}</ul>`;
-      grp.querySelector(".wg-head").onclick=()=>{
-        focusBooth(b.id);
-        if(window.innerWidth<=760)document.getElementById("sidebar").classList.remove("open");
-      };
-      grp.querySelectorAll(".del").forEach(btn=>{
-        btn.onclick=e=>{e.stopPropagation();removeWish(type,b.id,parseInt(btn.dataset.i));};
-      });
-      box.appendChild(grp);
-    });
-  });
+function wishCountOf(id){
+  return (state.wishlist[id]||[]).length + (state.goods[id]||[]).length;
 }
 
 /* ============================================================
@@ -1127,89 +965,14 @@ document.getElementById("mCloseBtn").onclick=()=>modalBg.classList.remove("open"
 modalBg.addEventListener("click",e=>{if(e.target===modalBg)modalBg.classList.remove("open");});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")modalBg.classList.remove("open");});
 
-/* ============================================================
-   11. 탭 / 모바일 패널
-   ============================================================ */
-const tabs={fav:[document.getElementById("tabFav"),document.getElementById("panelFav")],
-            wish:[document.getElementById("tabWish"),document.getElementById("panelWish")]};
-function switchTab(name){
-  Object.entries(tabs).forEach(([k,[t,p]])=>{
-    t.classList.toggle("active",k===name); p.classList.toggle("active",k===name);
-  });
-}
-tabs.fav[0].onclick=()=>{switchTab("fav");document.getElementById("sidebar").classList.add("open");};
-tabs.wish[0].onclick=()=>{switchTab("wish");document.getElementById("sidebar").classList.add("open");};
-document.getElementById("mToggle").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
-
-document.getElementById("storageNote").textContent=Store.persistent
-  ? "✓ 즐겨찾기·위시리스트는 이 브라우저(localStorage)에 저장되어 새로고침해도 유지됩니다."
-  : "ⓘ 미리보기 환경에서는 임시 저장됩니다. 파일을 다운로드해 브라우저에서 직접 열면 영구 저장됩니다.";
-
 /* 초기화 */
-renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransform();
+renderMap(); applyTransform();
 </script>
 <script>
 /* ── 상단 통합 메뉴(햄버거) UI 배선 — 탭 전환·저장 로직은 기존 핸들러를 그대로 사용 ── */
 (function(){
-  const menuBtn=document.getElementById("menuBtn");
-  const menuDrop=document.getElementById("menuDrop");
-  const sidebarEl=document.getElementById("sidebar");
-  const scrim=document.getElementById("scrim");
-  function closeMenu(){menuDrop.classList.remove("open");menuBtn.setAttribute("aria-expanded","false");}
-  menuBtn.addEventListener("click",()=>{
-    const open=menuDrop.classList.toggle("open");
-    menuBtn.setAttribute("aria-expanded",open?"true":"false");
-  });
-  /* 항목 탭 → 메뉴 닫고 바텀시트 열기 (해당 패널 전환은 기존 onclick이 수행) */
-  ["tabFav","tabWish"].forEach(id=>{
-    document.getElementById(id).addEventListener("click",()=>{
-      closeMenu(); sidebarEl.classList.add("open");
-    });
-  });
-  /* 메뉴 바깥 탭 → 메뉴 닫기 */
-  document.addEventListener("click",e=>{
-    if(!e.target.closest("#menuDrop") && !e.target.closest("#menuBtn")) closeMenu();
-  });
-  /* 스크림 탭 → 바텀시트 닫기 */
-  scrim.addEventListener("click",()=>sidebarEl.classList.remove("open"));
-
-  /* ── 홀 선택 칩: 해당 홀 영역으로 pan + zoom fit (자동 계산된 아웃박스 사용) ── */
-  const HALL_RECTS={A:HALL_BOUNDS.A,B1:HALL_BOUNDS.B1};
-  function fitHall(r){
-    const vb=svg.viewBox.baseVal;
-    if(!r){state.scale=1;state.tx=0;state.ty=0;applyTransform();return;}
-    const s=Math.min(state.maxScale,Math.min(vb.width/r.w,vb.height/r.h)*0.92);
-    state.scale=s;
-    state.tx=vb.width/2-s*(r.x+r.w/2);
-    state.ty=vb.height/2-s*(r.y+r.h/2);
-    applyTransform();
-  }
-  document.querySelectorAll("#hallChips .chip").forEach(chip=>{
-    chip.addEventListener("click",()=>{
-      document.querySelectorAll("#hallChips .chip").forEach(c=>c.classList.toggle("active",c===chip));
-      fitHall(HALL_RECTS[chip.dataset.hall]||null);
-    });
-  });
-  /* ⟲ 전체 보기 시 칩 선택 상태도 '전체'로 동기화 */
-  document.getElementById("zoomReset").addEventListener("click",()=>{
-    document.querySelectorAll("#hallChips .chip").forEach(c=>c.classList.toggle("active",c.dataset.hall==="all"));
-  });
-
-  /* ── 즐겨찾기 FAB: 탭 → 즐겨찾기 바텀시트 (기존 탭 핸들러 재사용) ── */
-  document.getElementById("favFab").addEventListener("click",e=>{
-    e.stopPropagation();
-    document.getElementById("tabFav").click();
-  });
-  /* FAB 뱃지를 기존 favCount와 동기화 */
-  const favSrc=document.getElementById("favCount"), favDst=document.getElementById("fabFavCount");
-  const syncFab=()=>{favDst.textContent=favSrc.textContent;};
-  new MutationObserver(syncFab).observe(favSrc,{childList:true});
-  syncFab();
-  /* 즐겨찾기 리스트 항목 탭 → 시트 닫기 (지도 이동·펄스는 기존 핸들러 수행) */
-  document.getElementById("favList").addEventListener("click",e=>{
-    if(e.target.closest(".fav-item") && !e.target.closest(".rm"))
-      sidebarEl.classList.remove("open");
-  });
+  /* 목록 뷰 상태 — 탭(전체/즐겨찾기/위시리스트)과 홀 필터(전체/A/B1)의 조합 */
+  let listTab="all", currentHall="all";
 
   /* ── 우상단 원형 검색 버튼 → 검색 캡슐 펼침 (0.25s ease-out) ── */
   const searchBox=document.getElementById("searchBox");
@@ -1230,39 +993,83 @@ renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransfor
     if(e.target.closest("button[data-id]")) closeSearch();
   });
 
-  /* ── [지도|목록] 세그먼트 토글 + 존별 목록 뷰 ── */
+  /* ── [지도|목록] 세그먼트 토글 + 탭/홀 조합 목록 뷰 ── */
   const segMap=document.getElementById("segMap"), segList=document.getElementById("segList");
   const listView=document.getElementById("listView"), listContent=document.getElementById("listContent");
   const BM_PATH='M6 3h12v18l-6-4.5L6 21z';
   function bmSvg(){return `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="${BM_PATH}"/></svg>`;}
+
+  /* 현재 탭 + 홀 필터의 교집합 부스 (시설·통로 제외) */
+  function pickBooths(){
+    let arr=BOOTHS.filter(b=>!b.fac && !b.corridor);
+    if(listTab==="fav")       arr=arr.filter(b=>state.favorites.has(b.id));
+    else if(listTab==="wish") arr=arr.filter(b=>hasWish(b.id));
+    if(currentHall!=="all")   arr=arr.filter(b=>b.hall===currentHall);
+    return arr;
+  }
+  function emptyMsg(base){
+    /* base=탭 조건만 적용했을 때의 개수 (홀 필터 전) */
+    if(currentHall!=="all" && base>0)
+      return `선택한 홀에는 해당 부스가 없어요.`;
+    if(listTab==="fav")  return `북마크한 부스가 없어요.<br>지도에서 부스의 <b>북마크</b>를 눌러 추가하세요.`;
+    if(listTab==="wish") return `위시리스트에 담은 부스가 없어요.<br>부스 상세에서 책·굿즈를 추가하세요.`;
+    return `표시할 부스가 없어요.`;
+  }
   function buildListView(){
+    const pool=pickBooths();
+    const inPool=new Set(pool.map(b=>b.id));
+    const item=b=>{
+      const wn=(listTab==="wish")?`<span class="lv-wishn">${wishCountOf(b.id)}</span>`:"";
+      return `<div class="lv-item" data-id="${b.id}">
+        <button class="lv-bm${state.favorites.has(b.id)?" on":""}" data-id="${b.id}" aria-label="즐겨찾기 토글">${bmSvg()}</button>
+        <b>${b.name}</b>${wn}<span class="lv-id">${b.id.replace("A2402W","A2402")}</span></div>`;
+    };
     let html="";
-    const item=b=>`<div class="lv-item" data-id="${b.id}">
-      <button class="lv-bm${state.favorites.has(b.id)?" on":""}" data-id="${b.id}" aria-label="즐겨찾기 토글">${bmSvg()}</button>
-      <b>${b.name}</b><span class="lv-id">${b.id.replace("A2402W","A2402")}</span></div>`;
-    /* 존별 섹션 — 카테고리 필터(activeFilters) 반영 */
     BLOCKS.forEach(z=>{
-      const items=BOOTHS.filter(b=>b.block===z.label && state.activeFilters.has(b.cat));
+      const items=BOOTHS.filter(b=>b.block===z.label && inPool.has(b.id));
       if(!items.length) return;
       html+=`<div class="lv-zone"><h4>${z.label} · ${z.hall}홀</h4>${items.map(item).join("")}</div>`;
     });
-    /* 특별 부스 (시설·통로 제외, 필터 반영) */
-    const specials=BOOTHS.filter(b=>!b.block && !b.fac && !b.corridor && state.activeFilters.has(b.cat));
+    const specials=pool.filter(b=>!b.block);
     if(specials.length)
       html+=`<div class="lv-zone"><h4>특별 부스</h4>${specials.map(item).join("")}</div>`;
-    listContent.innerHTML=html||`<div class="empty-note">표시할 부스가 없습니다.<br>위 필터에서 카테고리를 켜 주세요.</div>`;
+    if(html) listContent.innerHTML=html;
+    else{
+      /* 빈 상태: 탭 조건만 적용한 개수로 메시지 분기 */
+      const base=BOOTHS.filter(b=>!b.fac && !b.corridor &&
+        (listTab==="fav"?state.favorites.has(b.id):listTab==="wish"?hasWish(b.id):true)).length;
+      listContent.innerHTML=`<div class="empty-note">${emptyMsg(base)}</div>`;
+    }
   }
-  /* 필터·범례 조작 시 목록 즉시 갱신 (지도 dim 처리는 기존 핸들러 수행) */
-  ["filterList","btnAllOn","btnAllOff"].forEach(id=>{
-    document.getElementById(id).addEventListener("click",()=>{
-      if(listView.classList.contains("open")) buildListView();
+  /* 데이터 변경(즐겨찾기·위시) 시: 뱃지 갱신 + 열려 있으면 스크롤 유지하며 목록 갱신
+     — toggleFav/addWish/removeWish가 호출 */
+  const favBadge=document.getElementById("fabFavCount");
+  refreshListView=()=>{
+    favBadge.textContent=state.favorites.size;
+    if(!listView.classList.contains("open")) return;
+    const st=listView.scrollTop; buildListView(); listView.scrollTop=st;
+  };
+  refreshListView(); /* 초기 뱃지 카운트 (localStorage 복원분 반영) */
+
+  /* 초록 북마크 카운터 탭 → 목록 뷰의 즐겨찾기 탭 열기 */
+  document.getElementById("favFab").addEventListener("click",()=>{
+    document.querySelector('#lvTabs .lv-tab[data-tab="fav"]').click();
+    setView("list");
+  });
+
+  /* 목록 탭 [전체|즐겨찾기|위시리스트] */
+  document.querySelectorAll("#lvTabs .lv-tab").forEach(tab=>{
+    tab.addEventListener("click",()=>{
+      document.querySelectorAll("#lvTabs .lv-tab").forEach(t=>t.classList.toggle("active",t===tab));
+      listTab=tab.dataset.tab; buildListView(); listView.scrollTop=0;
     });
   });
+
   function setView(mode){
     const isList=mode==="list";
     segMap.classList.toggle("active",!isList); segMap.setAttribute("aria-selected",String(!isList));
     segList.classList.toggle("active",isList); segList.setAttribute("aria-selected",String(isList));
-    if(isList) buildListView();
+    if(isList){ buildListView(); listView.scrollTop=0; }
     listView.classList.toggle("open",isList);
     document.body.classList.toggle("list-open",isList);
   }
@@ -1270,27 +1077,36 @@ renderMap(); renderFilters(); renderFavList(); renderWishGroups(); applyTransfor
   segList.addEventListener("click",()=>setView("list"));
   listContent.addEventListener("click",e=>{
     const bm=e.target.closest(".lv-bm");
-    if(bm){
-      toggleFav(bm.dataset.id);                       /* 기존 즐겨찾기 로직 그대로 */
-      bm.classList.toggle("on",state.favorites.has(bm.dataset.id));
-      return;
-    }
+    if(bm){ toggleFav(bm.dataset.id); return; }   /* toggleFav → refreshListView가 갱신 */
     const it=e.target.closest(".lv-item");
     if(it){ setView("map"); focusBooth(it.dataset.id); }
   });
 
-  /* ── 시트 핸들 아래로 스와이프 → 닫기 ── */
-  const handle=document.getElementById("mToggle");
-  let swipeY=null, swiped=false;
-  handle.addEventListener("pointerdown",e=>{swipeY=e.clientY;swiped=false;});
-  handle.addEventListener("pointermove",e=>{
-    if(swipeY!==null && e.clientY-swipeY>46){sidebarEl.classList.remove("open");swiped=true;swipeY=null;}
+  /* ── 홀 선택 칩: 지도 모드 → 해당 홀로 fit / 목록 모드 → 목록 필터 ── */
+  const HALL_RECTS={A:HALL_BOUNDS.A,B1:HALL_BOUNDS.B1};
+  function fitHall(r){
+    const vb=svg.viewBox.baseVal;
+    if(!r){state.scale=1;state.tx=0;state.ty=0;applyTransform();return;}
+    const s=Math.min(state.maxScale,Math.min(vb.width/r.w,vb.height/r.h)*0.92);
+    state.scale=s;
+    state.tx=vb.width/2-s*(r.x+r.w/2);
+    state.ty=vb.height/2-s*(r.y+r.h/2);
+    applyTransform();
+  }
+  function selectHall(hall){
+    currentHall=hall;
+    document.querySelectorAll("#hallChips .chip").forEach(c=>c.classList.toggle("active",c.dataset.hall===hall));
+    if(listView.classList.contains("open")){ buildListView(); listView.scrollTop=0; }
+    else fitHall(HALL_RECTS[hall]||null);
+  }
+  document.querySelectorAll("#hallChips .chip").forEach(chip=>{
+    chip.addEventListener("click",()=>selectHall(chip.dataset.hall));
   });
-  handle.addEventListener("pointerup",()=>{swipeY=null;});
-  /* 스와이프로 닫은 직후 발생하는 click이 토글로 재오픈하지 않게 차단 */
-  handle.addEventListener("click",e=>{
-    if(swiped){e.stopImmediatePropagation();swiped=false;}
-  },true);
+  /* ⟲ 전체 보기 → 홀 필터도 '전체'로 동기화 (지도 모드 전용) */
+  document.getElementById("zoomReset").addEventListener("click",()=>{
+    currentHall="all";
+    document.querySelectorAll("#hallChips .chip").forEach(c=>c.classList.toggle("active",c.dataset.hall==="all"));
+  });
 })();
 
 /* ── 모바일 초기 뷰: A홀 입구 부근(647,1010) 기준 5배 확대 상태로 시작 ── */
