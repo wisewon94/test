@@ -23,10 +23,12 @@
   font-size:15px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;overflow:hidden;}
+html,body{height:100%;margin:0;overflow:hidden;}
 body{
+  height:100vh;   /* 폴백 */
+  height:100dvh;  /* iOS Safari: 주소창 제외 실제 가시 높이 */
   font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
-  background:var(--paper); color:var(--ink);
+  background:var(--paper-deep); color:var(--ink);
 }
 
 /* ── 상단 플로팅 레이어 (검색 캡슐 + 원형 메뉴 + 홀 칩) ── */
@@ -59,8 +61,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:45;
 .sr-dot{width:9px;height:9px;border-radius:50%;flex:none;}
 .sr-empty{padding:14px;color:var(--ink-soft);font-size:0.85rem;}
 
-/* ── 레이아웃 (지도 풀블리드, 플로팅 요소가 위에 뜸) ── */
-.layout{display:flex;height:100%;}
+/* ── 레이아웃 (뷰포트에 직접 고정 — 지도 배경이 safe-area 포함 화면 끝까지) ── */
+.layout{position:fixed;inset:0;display:flex;}
 
 /* ── 원형 플로팅 메뉴 버튼 + 드롭다운 ── */
 .menu-btn{flex:none;width:46px;height:46px;border:1.5px solid var(--ink);border-radius:50%;
