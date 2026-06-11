@@ -418,14 +418,21 @@ const SPECIAL = [
 
 /* ── (2) 일반 부스 블록 — PDF 블록 구조(좌측 소형 부스 그리드 + 우측 대형 부스) ──
    spec: {label, hall, x, y, w, h, names:[소형부스], big:대형부스, cols, start} */
+
+/* 간격 상수 — 전 존 공통 적용 (기존 다수파 값 기준 통일) */
+const ZONE_LABEL_GAP = 1.5;  /* 존 라벨 배지 하단 ↔ 첫 부스 행 상단 */
+const BOOTH_ROW_GAP  = 1.6;  /* 부스 행 사이 세로 간격 */
+const BOOTH_COL_GAP  = 1.6;  /* 부스 열 사이 가로 간격 */
+const ZONE_LABEL_H   = 9;    /* 존 라벨 배지 높이 */
+
 const BLOCKS = [
   /* Hall B1 */
-  {label:"B700",hall:"B1",x:828,y:160,w:48, h:112,cols:1,start:5,names:["북살롱 라운지","프레스룸","미디어버스","사월의눈"]},
+  {label:"B700",hall:"B1",x:828,y:162,w:48, h:112,cols:1,start:5,names:["북살롱 라운지","프레스룸","미디어버스","사월의눈"]},
   {label:"B500",hall:"B1",x:552,y:275,w:132,h:148,cols:2,names:["도서출판 푸른숲","산지니","글항아리","워크룸 프레스","(주)까치글방","청아출판사·봄마중"],big:"시공사"},
   {label:"B600",hall:"B1",x:692,y:275,w:188,h:148,cols:2,names:["윌북","클레이하우스","진선출판사","도서출판 동녘","보스토크 프레스","프리즘오브"],big:"더중앙플러스"},
-  {label:"B100",hall:"B1",x:528,y:432,w:88, h:108,cols:2,names:["부산출판문화산업협회","뜨인돌출판","아작","도서출판 키다리","이퍼블릭 코리아","스토리보울"]},
-  {label:"B200",hall:"B1",x:624,y:432,w:66, h:108,cols:2,names:["마음모자","펜타클","이룸아이","(주)학토재"]},
-  {label:"B300",hall:"B1",x:698,y:432,w:76, h:108,cols:2,names:["(주)도서출판보리","노란상상","니케북스","목요일출판사","페이퍼스토리","안그라픽스"]},
+  {label:"B100",hall:"B1",x:528,y:435,w:88, h:108,cols:2,names:["부산출판문화산업협회","뜨인돌출판","아작","도서출판 키다리","이퍼블릭 코리아","스토리보울"]},
+  {label:"B200",hall:"B1",x:624,y:435,w:66, h:108,cols:2,names:["마음모자","펜타클","이룸아이","(주)학토재"]},
+  {label:"B300",hall:"B1",x:698,y:435,w:76, h:108,cols:2,names:["(주)도서출판보리","노란상상","니케북스","목요일출판사","페이퍼스토리","안그라픽스"]},
 
   /* Hall A — Row 1 */
   {label:"A1900",hall:"A",x:118,y:620,w:52, h:78,cols:1,start:2,names:["휴먼밸류·더클래스","썸북스","북챗","국가보훈부"]},
@@ -452,12 +459,12 @@ const BLOCKS = [
   {label:"A1200",hall:"A",x:765,y:822,w:108,h:85,cols:2,names:["전국동네책방네트워크","엘르 코리아","생명의말씀사","잉글리시에그"],big:"소전문화재단"},
 
   /* Hall A — Row 4 */
-  {label:"A100", hall:"A",x:40, y:917,w:95, h:88,cols:2,names:["오이뮤","은행나무","(주)휴머니스트 출판그룹","사회평론","주식회사 난다","안온북스"]},
-  {label:"A200", hall:"A",x:150,y:917,w:108,h:88,cols:2,names:["우리나비","도서출판 폭스코너","도서출판 다독다독","성서유니온"],big:"한국출판문화산업진흥원"},
-  {label:"A300", hall:"A",x:272,y:917,w:108,h:88,cols:2,names:["청미출판사","(주)열린책들","(주)오팬하우스","주식회사 돌베개"],big:"(주)학지사"},
-  {label:"A400", hall:"A",x:406,y:917,w:108,h:88,cols:2,names:["평산책방","네이버웹툰","보림출판사","한국과학기술출판협회"],big:"아모레퍼시픽재단"},
-  {label:"A500", hall:"A",x:528,y:917,w:108,h:88,cols:2,names:["군자출판사","소미미디어","(주)성안당","한림출판사"],big:"(주)위즈덤하우스"},
-  {label:"A600", hall:"A",x:684,y:917,w:160,h:88,cols:1,names:["봄알람","타이피스트"],big:"주빈국 프랑스 Guest of Honor France"},
+  {label:"A100", hall:"A",x:40, y:919,w:95, h:88,cols:2,names:["오이뮤","은행나무","(주)휴머니스트 출판그룹","사회평론","주식회사 난다","안온북스"]},
+  {label:"A200", hall:"A",x:150,y:919,w:108,h:88,cols:2,names:["우리나비","도서출판 폭스코너","도서출판 다독다독","성서유니온"],big:"한국출판문화산업진흥원"},
+  {label:"A300", hall:"A",x:272,y:919,w:108,h:88,cols:2,names:["청미출판사","(주)열린책들","(주)오팬하우스","주식회사 돌베개"],big:"(주)학지사"},
+  {label:"A400", hall:"A",x:406,y:919,w:108,h:88,cols:2,names:["평산책방","네이버웹툰","보림출판사","한국과학기술출판협회"],big:"아모레퍼시픽재단"},
+  {label:"A500", hall:"A",x:528,y:919,w:108,h:88,cols:2,names:["군자출판사","소미미디어","(주)성안당","한림출판사"],big:"(주)위즈덤하우스"},
+  {label:"A600", hall:"A",x:684,y:919,w:160,h:88,cols:1,names:["봄알람","타이피스트"],big:"주빈국 프랑스 Guest of Honor France"},
 ];
 
 /* 블록 → 개별 부스 생성 (PDF의 '좌측 소형 그리드 + 우측 대형' 패턴 재현) */
@@ -467,21 +474,20 @@ function buildBooths(){
     const prefix = s.label[0];
     const base = parseInt(s.label.slice(1),10);
     const start = s.start||1;
-    const gap = 1.6;
     const cols = s.cols||2;
     const rows = Math.ceil(s.names.length/cols);
     const smallW = s.big ? s.w*0.55 : s.w;
-    const cw = (smallW-gap*(cols-1))/cols;
-    const ch = (s.h-gap*(rows-1))/rows;
+    const cw = (smallW-BOOTH_COL_GAP*(cols-1))/cols;
+    const ch = (s.h-BOOTH_ROW_GAP*(rows-1))/rows;
     s.names.forEach((nm,i)=>{
       const c=i%cols, r=Math.floor(i/cols);
       out.push({id:prefix+(base+start+i), name:nm, cat:"booth",
-        x:s.x+c*(cw+gap), y:s.y+r*(ch+gap), w:cw, h:ch,
+        x:s.x+c*(cw+BOOTH_COL_GAP), y:s.y+r*(ch+BOOTH_ROW_GAP), w:cw, h:ch,
         hall:s.hall, block:s.label, desc:`${s.label} 구역 · ${s.hall}홀 일반 부스`});
     });
     if(s.big){
       out.push({id:prefix+(base+start+s.names.length), name:s.big, cat:"booth",
-        x:s.x+smallW+gap, y:s.y, w:s.w-smallW-gap, h:s.h,
+        x:s.x+smallW+BOOTH_COL_GAP, y:s.y, w:s.w-smallW-BOOTH_COL_GAP, h:s.h,
         hall:s.hall, block:s.label, big:true, desc:`${s.label} 구역 · ${s.hall}홀 대형 부스`});
     }
   });
@@ -559,11 +565,11 @@ function renderMap(){
     }
   });
 
-  /* 블록 라벨 (A2000, B500 …) — 블랙 필 배지 + 네온 그린 텍스트 */
+  /* 블록 라벨 (A2000, B500 …) — 블랙 필 배지 + 네온 그린 텍스트, 간격 상수 참조 */
   BLOCKS.forEach(s=>{
-    const lw=s.label.length*4.6+7, lh=9;
-    el("rect",{x:s.x,y:s.y-lh-1.5,width:lw,height:lh,rx:4.5,fill:"#111111"});
-    const t=el("text",{x:s.x+lw/2,y:s.y-lh/2-1.5,"font-size":6.6,"font-weight":800,fill:"#01FF01",
+    const lw=s.label.length*4.6+7, lh=ZONE_LABEL_H;
+    el("rect",{x:s.x,y:s.y-lh-ZONE_LABEL_GAP,width:lw,height:lh,rx:4.5,fill:"#111111"});
+    const t=el("text",{x:s.x+lw/2,y:s.y-lh/2-ZONE_LABEL_GAP,"font-size":6.6,"font-weight":800,fill:"#01FF01",
       "text-anchor":"middle","dominant-baseline":"central"});
     t.textContent=s.label;
   });
@@ -598,17 +604,18 @@ function renderMap(){
     }
 
     /* 🔖 즐겨찾기 북마크 토글 (부스 우상단) — 비활성: 회색 외곽선 / 활성: 그린 채움+블랙 외곽선 */
-    const ss=Math.max(5,Math.min(9,b.h*0.4));
-    const bw=ss*0.72, bx=b.x+b.w-bw-1.2, by=b.y+1.2;
+    const ssBase=Math.max(5,Math.min(9,b.h*0.4));
+    const ss=ssBase*0.8;                          /* 시각 크기 20% 축소 */
+    const bw=ss*0.72, bx=b.x+b.w-bw-1.4, by=b.y+1.4;
     const isFav=state.favorites.has(b.id);
     const star=el("path",{class:"booth-star","data-id":b.id,
       d:`M${bx},${by} h${bw} v${ss} l${-bw/2},${-ss*0.34} l${-bw/2},${ss*0.34} z`,
-      fill:isFav?"#01FF01":"none","stroke-width":0.7,
+      fill:isFav?"#01FF01":"none","stroke-width":0.6,
       stroke:isFav?"#111111":(dark?"#CFCFCC":"#8A8A86")},g);
     star.style.pointerEvents="auto";
 
-    /* 북마크 터치 히트 영역 — 시각 크기보다 크게 (작은 부스에서도 누르기 쉽게) */
-    const hs=Math.max(10,ss*1.6);
+    /* 북마크 터치 히트 영역 — 축소 전(ssBase) 기준 유지, 시각 크기만 줄임 */
+    const hs=Math.max(10,ssBase*1.6);
     const hit=el("rect",{class:"booth-star","data-id":b.id,
       x:b.x+b.w-hs, y:b.y, width:hs, height:hs,
       fill:"transparent"},g);
