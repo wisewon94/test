@@ -359,143 +359,353 @@ const CATEGORIES = {
   toilet:     {name:"화장실 Toilet",      color:"#7A8B8F"},
 };
 
-/* ── (1) 범례 컬러 부스 — PDF 좌표 그대로 ── */
+/* ── (1) 특수/범례 컬러 부스 — PDF 좌표 그대로 (B1홀 상단 + A·B홀 강연/카페/이벤트/시설) ── */
 const SPECIAL = [
-  {id:"B701", name:"커피 리브레 COFFEE LIBRE",        cat:"cafe",      x:418,y:175,w:118,h:85, hall:"B1", desc:"도서전 공식 카페."},
-  {id:"B702", name:"BBK × SIBF 책·카드록 with 짐들",  cat:"exhibition",x:552,y:175,w:50, h:85, hall:"B1", desc:"BBK × SIBF Book Lounge 협력 전시."},
-  {id:"B703", name:"주제전시 Theme Exhibition",       cat:"exhibition",x:622,y:175,w:48, h:85, hall:"B1", desc:"2026 도서전 주제관."},
-  {id:"B704", name:"책마당 Book Salon",               cat:"lecture",   x:692,y:175,w:128,h:85, hall:"B1", desc:"작가 강연·북토크 메인 무대 (B1홀)."},
-  {id:"B400", name:"책마을 Book Village",             cat:"village",   x:418,y:285,w:132,h:125,hall:"B1", desc:"독립출판·아트북 마켓 존."},
-  {id:"EV-B1",name:"BBK × 글로벌비즈니스 라운지 이벤트",cat:"event",    x:600,y:574,w:95, h:18, hall:"B1", corridor:1, desc:"홀 연결 통로 팝업 이벤트."},
-  {id:"A1901",name:"책낭독당 2 Readers Hall 2",       cat:"lecture",   x:63, y:620,w:36, h:78, hall:"A",  desc:"작가 낭독·대담 무대 (A홀 서측)."},
-  {id:"A2402W",name:"책낭독당 1 Readers Hall 1",      cat:"lecture",   x:845,y:620,w:62, h:78, hall:"A",  desc:"메인 낭독 무대 (A홀 동측)."},
-  {id:"EV-A", name:"사인회존 Autograph Zone",         cat:"event",     x:63, y:1012,w:80,h:14, hall:"A",  desc:"작가 사인회 전용 공간."},
-  {id:"WC-A1",name:"화장실 (A홀 좌측 상단)",          cat:"toilet",    x:152,y:580,w:22,h:22, hall:"A",  fac:1, desc:"A1900 구역 인근."},
-  {id:"WC-A2",name:"화장실 (A홀 우측 상단)",          cat:"toilet",    x:930,y:580,w:22,h:22, hall:"A",  fac:1, desc:"A2400 구역 인근."},
-  {id:"WC-A3",name:"화장실 (A홀 하단 1)",             cat:"toilet",    x:375,y:1029,w:22,h:22,hall:"A",  fac:1, desc:"A홀 하단 중앙."},
-  {id:"WC-A4",name:"화장실 (A홀 하단 2)",             cat:"toilet",    x:497,y:1029,w:22,h:22,hall:"A",  fac:1, desc:"A홀 하단 중앙."},
-  {id:"WC-B1",name:"화장실 (B1홀 우측 상단)",         cat:"toilet",    x:940,y:170,w:22,h:22, hall:"B1", fac:1, desc:"B1홀 출입구 인근."},
-  {id:"WC-B2",name:"화장실 (B1홀 우측)",              cat:"toilet",    x:915,y:445,w:22,h:22, hall:"B1", fac:1, desc:"티켓 데스크 인근."},
-  {id:"TK-B1",name:"티켓·인포데스크 (B1홀)",          cat:"event",     x:945,y:425,w:58,h:55, hall:"B1", fac:1, desc:"B1홀 티켓 발권 및 안내."},
-  {id:"TK-A", name:"티켓·인포데스크 (A홀)",           cat:"event",     x:845,y:1062,w:88,h:34,hall:"A",  fac:1, desc:"A홀 티켓 발권 및 안내."},
+  /* B1홀 상단 특수 구역 (좌→우): 카페 · 전시 · 전시 · 강연 */
+  {id:"B701", name:"커피 리브레 COFFEE LIBRE",         cat:"cafe",      x:418,y:175,w:118,h:85, hall:"B1", desc:"도서전 공식 카페 (연사 라운지·프레스 인근)."},
+  {id:"B702", name:"BBK × SIBF 책 라운지 with 일룸",   cat:"exhibition",x:552,y:175,w:50, h:85, hall:"B1", desc:"BBK × SIBF Book Lounge with iloom 협력 전시."},
+  {id:"B703", name:"주제전시 Theme Exhibition",        cat:"exhibition",x:622,y:175,w:48, h:85, hall:"B1", desc:"2026 도서전 주제관."},
+  {id:"B704", name:"책마당 Book Salon",                cat:"lecture",   x:692,y:175,w:128,h:85, hall:"B1", desc:"작가 강연·북토크 메인 무대 (B1홀)."},
+  /* B400 책마을 — 독립출판·아트북 통합 존 */
+  {id:"B400", name:"책마을 Book Village",              cat:"village",   x:418,y:285,w:132,h:125,hall:"B1", desc:"독립출판·아트북 마켓 통합 존."},
+  /* B207 홀 연결 통로 이벤트 */
+  {id:"B207", name:"SIBF × 글월 (페이지 사이의 우체국)",cat:"event",    x:600,y:574,w:95, h:18, hall:"B1", corridor:1, desc:"SIBF × geulwoll · 홀 연결 통로 우체국 이벤트."},
+  /* A홀 강연 무대 (좌·우 책만남홀) */
+  {id:"A1901",name:"책만남홀 2 Readers Hall 2",        cat:"lecture",   x:63, y:620,w:36, h:78, hall:"A",  desc:"작가 낭독·대담 무대 (A홀 서측)."},
+  {id:"A2402",name:"책만남홀 1 Readers Hall 1",        cat:"lecture",   x:845,y:620,w:62, h:78, hall:"A",  desc:"메인 낭독 무대 (A홀 동측)."},
+  /* A1900 구역 좌측 특수 칸: 아트숍(이벤트) + 연사 라운지2 */
+  {id:"A1903",name:"연사 라운지 2 Speakers Lounge 2",  cat:"booth",     x:151,y:620,w:30, h:24, hall:"A",  desc:"A1900 · 연사 대기 라운지."},
+  {id:"A1902",name:"아트숍 Art Shop",                  cat:"event",     x:151,y:646,w:30, h:52, hall:"A",  desc:"A1900 · 도서전 공식 아트숍."},
+  /* A홀 하단 사인회존 */
+  {id:"EV-A", name:"일러스트레이터스 월 Illustrators Wall",cat:"event", x:40, y:1012,w:80,h:14, hall:"A",  corridor:1, desc:"A113 · 일러스트레이터스 월 (A홀 하단)."},
+  /* 시설 — 화장실 / 티켓·인포데스크 */
+  {id:"WC-A1",name:"화장실 (A홀 좌측 상단)",           cat:"toilet",    x:152,y:580,w:22,h:22, hall:"A",  fac:1, desc:"A1900 구역 인근."},
+  {id:"WC-A2",name:"화장실 (A홀 우측 상단)",           cat:"toilet",    x:930,y:580,w:22,h:22, hall:"A",  fac:1, desc:"A2400 구역 인근."},
+  {id:"WC-A3",name:"화장실 (A홀 하단 1)",              cat:"toilet",    x:375,y:1029,w:22,h:22,hall:"A",  fac:1, desc:"A홀 하단 중앙."},
+  {id:"WC-A4",name:"화장실 (A홀 하단 2)",              cat:"toilet",    x:497,y:1029,w:22,h:22,hall:"A",  fac:1, desc:"A홀 하단 중앙."},
+  {id:"WC-B1",name:"화장실 (B1홀 우측 상단)",          cat:"toilet",    x:940,y:170,w:22,h:22, hall:"B1", fac:1, desc:"B1홀 출입구 인근."},
+  {id:"WC-B2",name:"화장실 (B1홀 우측)",               cat:"toilet",    x:915,y:445,w:22,h:22, hall:"B1", fac:1, desc:"티켓 데스크 인근."},
+  {id:"TK-B1",name:"티켓·인포데스크 (B1홀)",           cat:"event",     x:945,y:425,w:58,h:55, hall:"B1", fac:1, desc:"B1홀 티켓 발권 및 안내."},
+  {id:"TK-A", name:"티켓·인포데스크 (A홀)",            cat:"event",     x:845,y:1062,w:88,h:34,hall:"A",  fac:1, desc:"A홀 티켓 발권 및 안내."},
 ];
 
-/* ── (2) 일반 부스 블록 — PDF 블록 구조(좌측 소형 부스 그리드 + 우측 대형 부스) ──
-   spec: {label, hall, x, y, w, h, names:[소형부스], big:대형부스, cols, start} */
+/* ── (2) 일반 부스 구역 — PDF 실제 칸 구조 재현 ──
+   ZONES: 각 구역의 위치/크기 + 내부 열(column) 구조를 명시.
+   cols: 좌→우 열 배열. 각 열은 부스 배열 [{n:번호, t:이름, span:세로병합칸수=1}, ...] 아래→위(기본).
+   dir:'down' 이면 위→아래. 열마다 칸 수가 다를 수 있어 PDF 비대칭 구조를 그대로 반영. */
+const ZONE_LABEL_GAP = 1.5;
+const BOOTH_GAP      = 1.6;
+const ZONE_LABEL_H   = 9;
 
-/* 간격 상수 — 전 존 공통 적용 (기존 다수파 값 기준 통일) */
-const ZONE_LABEL_GAP = 1.5;  /* 존 라벨 배지 하단 ↔ 첫 부스 행 상단 */
-const BOOTH_GAP      = 1.6;  /* 부스 카드 사이 간격 — 가로/세로 동일 */
-const ZONE_LABEL_H   = 9;    /* 존 라벨 배지 높이 */
+const ZONES = [
+  /* ===================== Hall B1 ===================== */
+  /* B700 — 우측 세로 1열(위→아래): B707 연사라운지 / B706 연사라운지3 / B705 프레스룸 */
+  {label:"B700",hall:"B1",x:840,y:162,w:48,h:112,dir:"down",cols:[[
+    {n:"B707",t:"연사 라운지 Speakers Lounge"},
+    {n:"B706",t:"연사 라운지3 Speakers Lounge 3"},
+    {n:"B705",t:"프레스룸 Press Room"},
+  ]]},
 
-const BLOCKS = [
-  /* Hall B1 */
-  {label:"B700",hall:"B1",x:828,y:162,w:48, h:112,cols:1,start:5,names:["북살롱 라운지","프레스룸","미디어버스","사월의눈"]},
-  {label:"B500",hall:"B1",x:552,y:275,w:132,h:148,cols:2,names:["도서출판 푸른숲","산지니","글항아리","워크룸 프레스","(주)까치글방","청아출판사·봄마중"],big:"시공사"},
-  {label:"B600",hall:"B1",x:692,y:275,w:188,h:148,cols:2,names:["윌북","클레이하우스","진선출판사","도서출판 동녘","보스토크 프레스","프리즘오브"],big:"더중앙플러스"},
-  {label:"B100",hall:"B1",x:528,y:435,w:88, h:108,cols:2,names:["부산출판문화산업협회","뜨인돌출판","아작","도서출판 키다리","이퍼블릭 코리아","스토리보울"]},
-  {label:"B200",hall:"B1",x:624,y:435,w:66, h:108,cols:2,names:["마음모자","펜타클","이룸아이","(주)학토재"]},
-  {label:"B300",hall:"B1",x:698,y:435,w:76, h:108,cols:2,names:["(주)도서출판보리","노란상상","니케북스","목요일출판사","페이퍼스토리","안그라픽스"]},
+  /* B500 — 상단행 2블록(각 2열) + 하단행 대형 2개.
+     상단: [B502 윤에디션 | B503 롤러코스터·초록비책공방]  [B505 쪽프레스 | B506 도서출판도반]
+     하단: B501 한솔제지(주)(좌블록 폭) / B504 마포출판문화진흥센터(우블록 폭) */
+  {label:"B500",hall:"B1",x:552,y:275,w:132,h:70,
+    cols:[
+      [{n:"B502",t:"윤에디션"}],
+      [{n:"B503",t:"롤러코스터·초록비책공방"}],
+      null, /* 블록 간 간격 표현용 spacer */
+      [{n:"B505",t:"쪽프레스"}],
+      [{n:"B506",t:"도서출판도반"}],
+    ]},
+  {label:null,hall:"B1",x:552,y:353,w:62,h:57,cols:[[{n:"B501",t:"한솔제지(주)"}]]},
+  {label:null,hall:"B1",x:622,y:353,w:62,h:57,cols:[[{n:"B504",t:"마포출판문화진흥센터"}]]},
 
-  /* Hall A — Row 1 */
-  {label:"A1900",hall:"A",x:118,y:620,w:52, h:78,cols:1,start:2,names:["휴먼밸류·더클래스","썸북스","북챗","국가보훈부"]},
-  {label:"A2000",hall:"A",x:182,y:620,w:108,h:78,cols:2,names:["창비","안전가옥","아침달","다람출판사"],big:"문학동네"},
-  {label:"A2100",hall:"A",x:300,y:620,w:108,h:78,cols:2,names:["(주)책읽는곰","움직씨 출판사","오리집","꿈공장플러스"],big:"어크로스"},
-  {label:"A2200",hall:"A",x:428,y:620,w:108,h:78,cols:2,names:["송송책방","페이퍼독","토끼섬","디자인이음"],big:"아카넷"},
-  {label:"A2300",hall:"A",x:556,y:620,w:108,h:78,cols:2,names:["컬처룩","코쿤북스","레모 출판사","스위밍꿀"],big:"유유출판사"},
-  {label:"A2400",hall:"A",x:684,y:620,w:108,h:78,cols:2,names:["도서출판점자","흰토끼프레스","후즈갓마이테일","귤프레스"],big:"바람북스"},
+  /* B600 — PDF 실제 구조: 상단행 + (가로통로) + 하단행
+     상단행: B602 문학동네(좌 대형) / 중앙 그리드[좌열 B605·B604, 우열 B608·B607·B606] / B609 국가보훈부(우 세로)
+     하단행: B601 안전가옥(좌 대형) / B603 창비(우 대형) */
+  {label:"B600",hall:"B1",x:692,y:275,w:76,h:68,cols:[[{n:"B602",t:"문학동네"}]]},
+  /* 중앙 그리드 좌열(2칸): B605 위 / B604 아래 */
+  {label:null,hall:"B1",x:773,y:275,w:13,h:68,dir:"down",
+    cols:[[{n:"B605",t:"다람출판사"},{n:"B604",t:"아침달"}]]},
+  /* 중앙 그리드 우열(3칸): B608 위 / B607 중 / B606 아래 */
+  {label:null,hall:"B1",x:787,y:275,w:13,h:68,dir:"down",
+    cols:[[{n:"B608",t:"썸북스"},{n:"B607",t:"북챗"},{n:"B606",t:"주식회사 휴먼밸류·더클래스"}]]},
+  /* 우측 세로 대형: B609 국가보훈부 (상단행 전체 높이) */
+  {label:null,hall:"B1",x:805,y:275,w:23,h:68,cols:[[{n:"B609",t:"국가보훈부 Ministry of Patriots and Veterans Affairs"}]]},
+  /* 하단행: B601 안전가옥(좌) / B603 창비(우 넓은칸) */
+  {label:null,hall:"B1",x:692,y:360,w:76,h:50,cols:[[{n:"B601",t:"안전가옥"}]]},
+  {label:null,hall:"B1",x:773,y:360,w:55,h:50,cols:[[{n:"B603",t:"창비"}]]},
 
-  /* Hall A — Row 2 (국제관 포함) */
-  {label:"A1300",hall:"A",x:40, y:715,w:95, h:92,cols:2,names:["늘보의 섬","한림사","도서출판 노란돼지","서해문집","국립생태원","퍼머넌트북스"]},
-  {label:"A1400",hall:"A",x:150,y:715,w:128,h:92,cols:2,names:["(주)창비교육","나비클럽","키큰도토리","국민서관"],big:"주식회사 한겨레엔"},
-  {label:"A1500",hall:"A",x:292,y:715,w:100,h:92,cols:1,names:["Wells Hamilton","연변교육출판사"],big:"펭귄랜덤하우스 UK"},
-  {label:"A1600",hall:"A",x:406,y:715,w:100,h:92,cols:1,names:["YUEWEN·WebNovel","퀴퍼 프린츠"],big:"타이베이도서전재단"},
-  {label:"A1700",hall:"A",x:520,y:715,w:128,h:92,cols:2,names:["Annick Press","Firefly Books","Orca Book Publishers","Éditions Alto"],big:"Livres Canada Books"},
-  {label:"A1800",hall:"A",x:765,y:715,w:142,h:92,cols:2,names:["(주)쌤앤파커스","프로칠레 PROCHILE","타이완콘텐츠진흥원","주한태국대사관 상무공사관실","Studio of Books","EC Publishing"],big:"독일 프랑크푸르트도서전"},
+  /* B100 — 좌블록 1열(B101~B103) + 우블록 2열(좌 B104~B106 / 우 B107~B109) */
+  {label:"B100",hall:"B1",x:528,y:435,w:24,h:108,
+    cols:[[{n:"B101",t:"어크로스"},{n:"B102",t:"움직씨 출판사·오리집"},{n:"B103",t:"(주)책읽는곰"}]]},
+  {label:null,hall:"B1",x:560,y:435,w:56,h:108,
+    cols:[
+      [{n:"B104",t:"페이퍼독·토끼섬"},{n:"B105",t:"송송책방"},{n:"B106",t:"꿈공장플러스"}],
+      [{n:"B107",t:"아카넷"},{n:"B108",t:"디자인이음"},{n:"B109",t:"컬처룩·코쿤북스"}],
+    ]},
 
-  /* Hall A — Row 3 */
-  {label:"A700", hall:"A",x:40, y:822,w:95, h:85,cols:2,names:["이야기장수","(주)김영사","(주)문학수첩","솔테라이브러리"]},
-  {label:"A800", hall:"A",x:150,y:822,w:108,h:85,cols:2,names:["황금가지","인플루엔셜","윌라","윌라스토리"],big:"민음사 출판그룹"},
-  {label:"A900", hall:"A",x:272,y:822,w:90, h:85,cols:1,names:["마음산책","서울특별시교육청"],big:"예스24"},
-  {label:"A1000",hall:"A",x:406,y:822,w:108,h:85,cols:2,names:["디자인하우스","주식회사 오뚜기","서울특별시 서울도서관","신한은행"],big:"사계절출판사"},
-  {label:"A1100",hall:"A",x:528,y:822,w:120,h:85,cols:2,names:["케이티밀리의서재","교보생명","길벗어린이","문학과지성사"],big:"교보문고"},
-  {label:"A1200",hall:"A",x:765,y:822,w:108,h:85,cols:2,names:["전국동네책방네트워크","엘르 코리아","생명의말씀사","잉글리시에그"],big:"소전문화재단"},
+  /* B200 — 2열(좌 B201~B203 / 우 B204~B206) */
+  {label:"B200",hall:"B1",x:624,y:435,w:66,h:108,
+    cols:[
+      [{n:"B201",t:"유유출판사"},{n:"B202",t:"바람북스"},{n:"B203",t:"레모 출판사·스위밍꿀"}],
+      [{n:"B204",t:"주식회사 도서출판점자"},{n:"B205",t:"후즈갓마이테일"},{n:"B206",t:"흰토끼프레스·(바캉스프로젝트)"}],
+    ]},
 
-  /* Hall A — Row 4 */
-  {label:"A100", hall:"A",x:40, y:919,w:95, h:88,cols:2,names:["오이뮤","은행나무","(주)휴머니스트 출판그룹","사회평론","주식회사 난다","안온북스"]},
-  {label:"A200", hall:"A",x:150,y:919,w:108,h:88,cols:2,names:["우리나비","도서출판 폭스코너","도서출판 다독다독","성서유니온"],big:"한국출판문화산업진흥원"},
-  {label:"A300", hall:"A",x:272,y:919,w:108,h:88,cols:2,names:["청미출판사","(주)열린책들","(주)오팬하우스","주식회사 돌베개"],big:"(주)학지사"},
-  {label:"A400", hall:"A",x:406,y:919,w:108,h:88,cols:2,names:["평산책방","네이버웹툰","보림출판사","한국과학기술출판협회"],big:"아모레퍼시픽재단"},
-  {label:"A500", hall:"A",x:528,y:919,w:108,h:88,cols:2,names:["군자출판사","소미미디어","(주)성안당","한림출판사"],big:"(주)위즈덤하우스"},
-  {label:"A600", hall:"A",x:684,y:919,w:160,h:88,cols:1,names:["봄알람","타이피스트"],big:"주빈국 프랑스 Guest of Honor France"},
+  /* B300 — 좌블록 2열(좌 B301~B303 / 우 B304~B306) + 우블록 1열(B307~B309) */
+  {label:"B300",hall:"B1",x:698,y:435,w:56,h:108,
+    cols:[
+      [{n:"B301",t:"도서출판 노란돼지"},{n:"B302",t:"늘보의 섬"},{n:"B303",t:"(주)창비교육"}],
+      [{n:"B304",t:"서해문집"},{n:"B305",t:"한림사"},{n:"B306",t:"나비클럽"}],
+    ]},
+  {label:null,hall:"B1",x:762,y:435,w:24,h:108,
+    cols:[[{n:"B307",t:"국립생태원"},{n:"B308",t:"퍼머넌트북스"},{n:"B309",t:"주식회사 한겨레엔"}]]},
+
+  /* ===================== Hall A — Row 1 (A1900~A2400) ===================== */
+  /* A1900 — 좌측 세로 그리드. A1902 아트숍/A1903 연사라운지2 는 특수, 여기선 A1904~A1907 일반칸 */
+  {label:"A1900",hall:"A",x:182,y:620,w:30,h:78,dir:"down",
+    cols:[[{n:"A1907",t:""},{n:"A1906",t:""},{n:"A1905",t:""},{n:"A1904",t:""}]]},
+
+  /* A2000 — 2열 본 그리드(A2001~A2008) + 우측 대형 1열(A2009~A2010) */
+  {label:"A2000",hall:"A",x:225,y:620,w:74,h:78,
+    cols:[
+      [{n:"A2001",t:"생명의말씀사"},{n:"A2002",t:"성서유니온"},{n:"A2003",t:"도서출판 폭스코너·다독다독"},{n:"A2004",t:"안온북스"}],
+      [{n:"A2005",t:"청미출판사"},{n:"A2006",t:"(주)학지사"},{n:"A2007",t:"잉글리시에그"},{n:"A2008",t:"우리나비"}],
+    ]},
+  {label:null,hall:"A",x:303,y:620,w:40,h:78,
+    cols:[[{n:"A2009",t:"한국출판문화산업진흥원"},{n:"A2010",t:"주식회사 난다"}]]},
+
+  /* A2100 — 좌측 2개 세로(A2101 하 / A2102 상) + 우측 대형(A2103) */
+  {label:"A2100",hall:"A",x:355,y:620,w:36,h:78,
+    cols:[[{n:"A2101",t:"사회평론"},{n:"A2102",t:"오이뮤"}]]},
+  {label:null,hall:"A",x:395,y:620,w:42,h:78,cols:[[{n:"A2103",t:"은행나무·(주)휴머니스트 출판그룹"}]]},
+
+  /* A2200 — 3개 대형 단독 칸(A2201~A2203) */
+  {label:"A2200",hall:"A",x:449,y:620,w:118,h:78,
+    cols:[[{n:"A2201",t:"길벗어린이"}],[{n:"A2202",t:"문학과지성사"}],[{n:"A2203",t:"소전문화재단"}]]},
+
+  /* A2300 — 3개 대형 단독 칸(A2301~A2303) */
+  {label:"A2300",hall:"A",x:579,y:620,w:118,h:78,
+    cols:[[{n:"A2301",t:"서울특별시교육청"}],[{n:"A2302",t:"마음산책·사계절출판사"}],[{n:"A2303",t:"디자인하우스·주식회사 오뚜기"}]]},
+
+  /* A2400 — 단독 칸(A2401). A2402 책만남홀1은 SPECIAL */
+  {label:"A2400",hall:"A",x:709,y:620,w:40,h:78,cols:[[{n:"A2401",t:"타이베이도서전재단"}]]},
+
+  /* ===================== Hall A — Row 2 (A1300~A1800) ===================== */
+  /* A1300 — 3열(좌 A1301~A1304 / 중 A1305~A1308 / 우 A1309~A1311) */
+  /* A1300 — 좌블록[1열: A1304,A1303,A1302,A1301] +
+     우블록[2열: (A1308,A1307,A1306,A1305)|(A1311,A1310,A1309,빈칸)] */
+  {label:"A1300",hall:"A",x:40,y:715,w:95,h:92,blockGap:7,
+    sub:[
+      {wr:1, cols:[
+        [{n:"A1304",t:"귤프레스"},{n:"A1303",t:"프란츠"},{n:"A1302",t:"서사원 주식회사"},{n:"A1301",t:"옛눈북스"}],
+      ]},
+      {wr:2, cols:[
+        [{n:"A1308",t:"소장각·비플랫폼"},{n:"A1307",t:"한림출판사"},{n:"A1306",t:"쿵프레스"},{n:"A1305",t:"고요한소리"}],
+        [{n:"A1311",t:"유어마인드"},{n:"A1310",t:"라의눈주식회사"},{n:"A1309",t:"(주)불광미디어"},null],
+      ]},
+    ]},
+
+  /* A1400 — 좌블록[2열: (A1404,A1403,A1402,A1401)|(A1406,A1405)] +
+     우블록[2열: (A1408,A1407)|(A1410,A1409)] */
+  {label:"A1400",hall:"A",x:150,y:715,w:128,h:92,blockGap:7,
+    sub:[
+      {wr:1.4, cols:[
+        [{n:"A1404",t:"스토리보울"},{n:"A1403",t:"마음모자"},{n:"A1402",t:"펜타클"},{n:"A1401",t:"이룸아이"}],
+        [{n:"A1406",t:"(사)한국기독교출판협회·도서출판 CUP·동연·문광서원·바이블네비게이션·블리스·쿰란출판사·템북"},{n:"A1405",t:"몽당연필·구름이머무는동안·뜰힘·소유·아르카·지우"}],
+      ]},
+      {wr:1, cols:[
+        [{n:"A1408",t:"(주)이퍼블릭 코리아"},{n:"A1407",t:"아작"}],
+        [{n:"A1410",t:"에디토리얼·가지출판사·메멘토·목수책방·혜화1117"},{n:"A1409",t:"도서출판 키다리"}],
+      ]},
+    ]},
+
+  /* A1500 — 대형 2개 세로(A1501 하 / A1502 상) */
+  {label:"A1500",hall:"A",x:292,y:715,w:100,h:92,
+    cols:[[{n:"A1501",t:"시공사"},{n:"A1502",t:"전국동네책방네트워크"}]]},
+
+  /* A1600 — 대형 2개 좌우(A1601 | A1602) */
+  {label:"A1600",hall:"A",x:406,y:715,w:100,h:92,
+    cols:[[{n:"A1601",t:"(주)열린책들"}],[{n:"A1602",t:"(주)오팬하우스"}]]},
+
+  /* A1700 — 대형 3개 좌우(A1701 | A1702 | A1703) */
+  {label:"A1700",hall:"A",x:520,y:715,w:142,h:92,
+    cols:[[{n:"A1701",t:"교보문고·교보생명 서재"}],[{n:"A1702",t:"주식회사 케이티밀리의서재"}],[{n:"A1703",t:"예스24"}]]},
+
+  /* A1800 — 좌 대형(A1801 하·A1802 상) / 중 대형(A1803) / 우 세로 4칸(A1804~A1807) */
+  {label:"A1800",hall:"A",x:700,y:715,w:142,h:92,
+    cols:[
+      [{n:"A1801",t:"Livres Canada Books·Annick Press·BookLand Press·Drawn & Quarterly·Éditions Alto·Fonfon·Michel Quintin·Québec Amérique·Firefly Books·les Malins·McGill-Queen's·Orca·U. of Toronto Press"},{n:"A1802",t:"펭귄랜덤하우스 UK"}],
+      [{n:"A1803",t:"독일 프랑크푸르트도서전"}],
+      [{n:"A1804",t:"YUEWEN·WebNovel"},{n:"A1805",t:"Beijiao Children Joy Education & Technology (Beijing) Co., Ltd."},{n:"A1806",t:"Wells Hamilton Literary Consultants"},{n:"A1807",t:"연사 라운지1 Speakers Lounge 1"}],
+    ]},
+
+  /* ===================== Hall A — Row 3 (A700~A1200) ===================== */
+  /* A700 — 좌블록[1열: A704,A703,A702,A701] + 우블록[2열: (A707,A706,A705)|(A709,A708)] */
+  {label:"A700",hall:"A",x:40,y:822,w:95,h:85,blockGap:7,
+    sub:[
+      {wr:1, cols:[
+        [{n:"A704",t:"도서출판 북극곰"},{n:"A703",t:"사단법인 한국대학출판협회"},{n:"A702",t:"타이피스트"},{n:"A701",t:"봄알람"}],
+      ]},
+      {wr:2, cols:[
+        [{n:"A707",t:"책읽는고양이"},{n:"A706",t:"주식회사 성안당"},{n:"A705",t:"국민서관"}],
+        [{n:"A709",t:"고래인·키큰도토리"},{n:"A708",t:"소미디어"}],
+      ]},
+    ]},
+
+  /* A800 — 좌블록[2열: (A802,A801)|(A804,A803)] + 우블록[2열: (A806,A805)|(A808,A807)] */
+  {label:"A800",hall:"A",x:150,y:822,w:108,h:85,blockGap:7,
+    sub:[
+      {wr:1, cols:[
+        [{n:"A802",t:"주식회사 소원나무"},{n:"A801",t:"부산출판문화산업협회"}],
+        [{n:"A804",t:"밝은미래"},{n:"A803",t:"뜨인돌출판"}],
+      ]},
+      {wr:1, cols:[
+        [{n:"A806",t:"클레이하우스·주식회사"},{n:"A805",t:"도서출판 동녘"}],
+        [{n:"A808",t:"진선출판사"},{n:"A807",t:"보스토크 프레스·프리즘오브"}],
+      ]},
+    ]},
+
+  /* A900 — 좌 세로(A901 하·A902 상) / 우 대형(A903) */
+  {label:"A900",hall:"A",x:272,y:822,w:90,h:85,
+    cols:[[{n:"A901",t:"윌북"},{n:"A902",t:"더중앙플러스"}],[{n:"A903",t:"동아시아·허블"}]]},
+
+  /* A1000 — 대형 2개 좌우(A1001 | A1002) */
+  {label:"A1000",hall:"A",x:406,y:822,w:108,h:85,
+    cols:[[{n:"A1001",t:"주식회사 돌베개·평산책방"}],[{n:"A1002",t:"재단법인 아모레퍼시픽재단"}]]},
+
+  /* A1100 — 대형 3개 좌우(A1101 | A1102 | A1103) */
+  {label:"A1100",hall:"A",x:528,y:822,w:134,h:85,
+    cols:[[{n:"A1101",t:"민음사 출판그룹·황금가지"}],[{n:"A1102",t:"인플루엔셜·윌라·윌라스토리"}],[{n:"A1103",t:"서울특별시 서울도서관·신한은행"}]]},
+
+  /* A1200 — 좌 대형 2개(A1201 | A1202) + 우 세로 5칸(A1203~A1207) */
+  {label:"A1200",hall:"A",x:700,y:822,w:142,h:85,
+    cols:[
+      [{n:"A1201",t:"타이완콘텐츠진흥원"}],
+      [{n:"A1202",t:"주한태국대사관 상무공사관실"}],
+      [{n:"A1203",t:"EC Publishing LLC"},{n:"A1204",t:"Studio of Books LLC"},{n:"A1205",t:"퀴퍼 프린츠 Quipper Prints"},{n:"A1206",t:"프로칠레 PROCHILE·Calcetines Animados·VLP Agency·Recrea Libros"},{n:"A1207",t:"연변교육출판사 Yanbian Education Press"}],
+    ]},
+
+  /* ===================== Hall A — Row 4 (A100~A600) ===================== */
+  /* A100 — 좌블록[1열: A104,A103,A102,A101] + 우블록[2열: (A108,A107,A106,A105)|(A112,A111,A110,A109)] */
+  {label:"A100",hall:"A",x:40,y:919,w:95,h:88,blockGap:7,
+    sub:[
+      {wr:1, cols:[
+        [{n:"A104",t:"봄봄출판사"},{n:"A103",t:"도서출판부카"},{n:"A102",t:"별빛들"},{n:"A101",t:"고스트북스"}],
+      ]},
+      {wr:2, cols:[
+        [{n:"A108",t:"곰세마리·도서출판 달리"},{n:"A107",t:"애플트리테일즈"},{n:"A106",t:"밝은세상"},{n:"A105",t:"단추 출판사"}],
+        [{n:"A112",t:"한국출판마케팅연구소"},{n:"A111",t:"시사북스(빈페이지)"},{n:"A110",t:"소동출판사"},{n:"A109",t:"핀드"}],
+      ]},
+    ]},
+
+  /* A200 — 좌블록[2열: (A204,A203,A202,A201)|(A206,A205)] + 우블록[2열: (A208,A207)|(A210,A209)] */
+  {label:"A200",hall:"A",x:150,y:919,w:118,h:88,blockGap:7,
+    sub:[
+      {wr:1, cols:[
+        [{n:"A204",t:"안녕로빈"},{n:"A203",t:"인북"},{n:"A202",t:"미디어버스·사월의눈·프로파간다"},{n:"A201",t:"안그라픽스"}],
+        [{n:"A206",t:"(주)학토재"},{n:"A205",t:"킨더랜드·반달·여섯번째봄"}],
+      ]},
+      {wr:1, cols:[
+        [{n:"A208",t:"(주)도서출판보리"},{n:"A207",t:"노란상상"}],
+        [{n:"A210",t:"거북이북스"},{n:"A209",t:"니케북스·목요일출판사·페이퍼스토리"}],
+      ]},
+    ]},
+
+  /* A300 — 좌블록[2열: (A302,A301)|(A304,A303)] + 우블록[2열: (A306,A305)|(A308,A307)] */
+  {label:"A300",hall:"A",x:272,y:919,w:108,h:88,blockGap:7,
+    sub:[
+      {wr:1, cols:[
+        [{n:"A302",t:"산지니"},{n:"A301",t:"워크룸 프레스"}],
+        [{n:"A304",t:"글항아리"},{n:"A303",t:"(주)까치글방"}],
+      ]},
+      {wr:1, cols:[
+        [{n:"A306",t:"도서출판 풀빛"},{n:"A305",t:"청아출판사·봄마중"}],
+        [{n:"A308",t:"(사)한국과학기술출판협회·군자출판사"},{n:"A307",t:"도서출판 푸른숲"}],
+      ]},
+    ]},
+
+  /* A400 — 좌 세로(A401 하·A402 상) / 우 대형(A403) */
+  {label:"A400",hall:"A",x:406,y:919,w:108,h:88,
+    cols:[[{n:"A401",t:"보림출판사"},{n:"A402",t:"네이버웹툰"}],[{n:"A403",t:"(주)위즈덤하우스"}]]},
+
+  /* A500 — 대형 3개 좌우(A501 | A502 | A503) */
+  {label:"A500",hall:"A",x:528,y:919,w:108,h:88,
+    cols:[[{n:"A501",t:"이야기장수·솔테라이브러리"}],[{n:"A502",t:"(주)김영사"}],[{n:"A503",t:"(주)문학수첩"}]]},
+
+  /* A600 — 대형(A601 주빈국 프랑스) + 우측 세로(쌤앤파커스) */
+  {label:"A600",hall:"A",x:684,y:919,w:160,h:88,
+    cols:[[{n:"A601",t:"주빈국 프랑스 Guest of Honor France",big:true}],[{n:"A601R",t:"(주)쌤앤파커스 Sam & Parkers Co., Ltd."}]]},
 ];
 
-/* ── 존 블록 간 간격 상수 (전 존 공통) ── */
-const ZONE_GAP     = 14;   /* 존 블록 사이 간격 — 가로/세로 동일 (다수파 값) */
-const CORRIDOR_GAP = 48;   /* 메인 동선(통로) 폭 — 일반 존 간격과 구분 */
-const HALL_PAD     = 14;   /* 홀 아웃박스 = 콘텐츠 바운딩 박스 + 패딩 */
 
-/* 행 단위 연쇄 배치 정의 — "|" = 메인 동선(CORRIDOR_GAP).
-   첫 행만 y0 앵커, 이후 행 y는 ZONE_GAP으로 체인 계산 */
-const LAYOUT_ROWS = [
-  /* Hall B1 — B400(책마을, x418..550) 우측에서 체인 시작 */
-  {hall:"B1", y0:275, x0:564, cols:["B500","B600"]},
-  {hall:"B1",         x0:564, cols:["B100","B200","B300"]},
-  /* Hall A */
-  {hall:"A",  y0:620, x0:118, cols:["A1900","A2000","A2100","A2200","A2300","A2400"]},
-  {hall:"A",          x0:40,  cols:["A1300","A1400","A1500","A1600","A1700","|","A1800"]},
-  {hall:"A",          x0:40,  cols:["A700","A800","A900","|","A1000","A1100","|","A1200"]},
-  {hall:"A",          x0:40,  cols:["A100","A200","A300","A400","A500","|","A600"]},
-];
-(function layoutZones(){
-  const byLabel={}; BLOCKS.forEach(b=>byLabel[b.label]=b);
-  const yNext={};
-  LAYOUT_ROWS.forEach(r=>{
-    const y=(r.y0!==undefined)?r.y0:yNext[r.hall];
-    let x=r.x0, gap=0, rowH=0;
-    r.cols.forEach(c=>{
-      if(c==="|"){gap=CORRIDOR_GAP;return;}
-      x+=gap;
-      const z=byLabel[c]; z.x=x; z.y=y;
-      x+=z.w; gap=ZONE_GAP;
-      rowH=Math.max(rowH,z.h);
-    });
-    yNext[r.hall]=y+rowH+ZONE_GAP;
-  });
-  /* B700: B704(x692,w128) 우측에 열 체인, 하단은 B500 행 상단에서 ZONE_GAP 확보 */
-  const b7=byLabel["B700"];
-  b7.x=692+128+ZONE_GAP;
-  b7.y=162;
-  b7.h=(275-ZONE_GAP)-b7.y;
-})();
-
-/* 블록 → 개별 부스 생성 (PDF의 '좌측 소형 그리드 + 우측 대형' 패턴 재현) */
+/* ── (3) ZONES → 개별 부스 좌표 분할 ──
+   두 가지 구역 정의 방식 지원:
+   (A) cols 방식: z.cols = [[cell,...], ...] — 단일 블록, 좌→우 열. 각 열은 dir 방향(기본 아래→위).
+   (B) subBlocks 방식: z.sub = [{wr:폭비율, cols:[[cell,...],...]}, ...] — 블록 사이 통로(gap) 자동.
+       각 서브블록 내부 cols는 위→아래(top-down)로 나열(PDF 시각순서 그대로). */
 function buildBooths(){
   const out = [...SPECIAL];
-  BLOCKS.forEach(s=>{
-    const prefix = s.label[0];
-    const base = parseInt(s.label.slice(1),10);
-    const start = s.start||1;
-    const cols = s.cols||2;
-    const rows = Math.ceil(s.names.length/cols);
-    const smallW = s.big ? s.w*0.55 : s.w;
-    const cw = (smallW-BOOTH_GAP*(cols-1))/cols;
-    const ch = (s.h-BOOTH_GAP*(rows-1))/rows;
-    s.names.forEach((nm,i)=>{
-      const c=i%cols, r=Math.floor(i/cols);
-      out.push({id:prefix+(base+start+i), name:nm, cat:"booth",
-        x:s.x+c*(cw+BOOTH_GAP), y:s.y+r*(ch+BOOTH_GAP), w:cw, h:ch,
-        hall:s.hall, block:s.label, desc:`${s.label} 구역 · ${s.hall}홀 일반 부스`});
+  let curBlock = null;
+
+  function placeCols(cols, bx, by, bw, bh, dir, hall, blockOf){
+    const realCols = cols.filter(c=>c!==null);
+    const nCols = realCols.length;
+    const spacerCount = cols.length - nCols;
+    const unit = (bw - BOOTH_GAP*(cols.length-1)) / (nCols + spacerCount*0.35);
+    let cx = bx;
+    cols.forEach((col)=>{
+      if(col===null){ cx += unit*0.35 + BOOTH_GAP; return; }
+      const cw = unit;
+      const nRows = col.length;
+      const ch = (bh - BOOTH_GAP*(nRows-1)) / nRows;
+      col.forEach((cell,ri)=>{
+        if(!cell){ return; } /* 빈 칸(블록 내 결번) 건너뜀 */
+        const yIdx = (dir==="down") ? ri : (nRows-1-ri);
+        const cy = by + yIdx*(ch+BOOTH_GAP);
+        out.push({
+          id:cell.n, name:cell.t||cell.n, cat:"booth",
+          x:+(cx).toFixed(1), y:+(cy).toFixed(1), w:+(cw).toFixed(1), h:+(ch).toFixed(1),
+          hall:hall, block:blockOf, big:cell.big||undefined,
+          desc:`${blockOf||hall+"홀"} 구역 · ${hall}홀 일반 부스`
+        });
+      });
+      cx += cw + BOOTH_GAP;
     });
-    if(s.big){
-      out.push({id:prefix+(base+start+s.names.length), name:s.big, cat:"booth",
-        x:s.x+smallW+BOOTH_GAP, y:s.y, w:s.w-smallW-BOOTH_GAP, h:s.h,
-        hall:s.hall, block:s.label, big:true, desc:`${s.label} 구역 · ${s.hall}홀 대형 부스`});
+  }
+
+  ZONES.forEach(z=>{
+    if(z.label) curBlock = z.label;
+    const blockOf = z.label || curBlock;
+    const dir = z.dir || "down"; /* subBlocks 기본은 top-down */
+
+    if(z.sub){
+      /* 서브블록 방식: wr 비율로 폭 분배, 블록 사이 BLOCK_GAP */
+      const BLOCK_GAP = z.blockGap!=null ? z.blockGap : 6;
+      const nB = z.sub.length;
+      const totalWr = z.sub.reduce((s,b)=>s+b.wr,0);
+      const avail = z.w - BLOCK_GAP*(nB-1);
+      let bx = z.x;
+      z.sub.forEach(sb=>{
+        const bw = avail * (sb.wr/totalWr);
+        placeCols(sb.cols, bx, z.y, bw, z.h, sb.dir||dir, z.hall, blockOf);
+        bx += bw + BLOCK_GAP;
+      });
+    }else{
+      /* 기존 cols 방식 (단일 블록) — 기본 dir 아래→위 유지 */
+      placeCols(z.cols, z.x, z.y, z.w, z.h, z.dir||"up", z.hall, blockOf);
     }
   });
+
   return out;
 }
 const BOOTHS = buildBooths();
+
+/* 목록·검색 그룹 헤더용: 라벨이 있는 구역만 (렌더링 순서 유지) */
+const BLOCKS = ZONES.filter(z=>z.label).map(z=>({label:z.label, hall:z.hall, x:z.x, y:z.y}));
+
+/* 홀 외곽 박스 = 콘텐츠 바운딩 박스 + 패딩 */
+const HALL_PAD = 14;
 
 /* 홀 아웃박스 자동 계산: 시설(fac)·통로(corridor) 요소 제외한 콘텐츠 bbox + HALL_PAD */
 function computeHallBounds(){
@@ -560,6 +770,36 @@ function el(tag,attrs={},parent=viewport){
   parent.appendChild(n); return n;
 }
 function truncate(s,n){ return s.length>n ? s.slice(0,n-1)+"…" : s; }
+
+/* 라벨 줄바꿈: 구분자(·, 공백, /, +) 우선으로 단어를 나눠 칸 폭(maxChars)에 맞게 줄을 채움.
+   maxLines를 넘으면 마지막 줄 끝에 '…' 표기. 단어 하나가 너무 길면 강제로 끊음. */
+function wrapLabel(text, maxChars, maxLines){
+  if(maxChars<2) maxChars=2;
+  /* 구분자를 토큰 경계로: 가운뎃점/슬래시/플러스는 그 자리에서, 공백은 단순 분리 */
+  const rawTokens = text.split(/(?<=[·/+])|\s+/).filter(t=>t.length>0);
+  /* 토큰이 maxChars보다 길면 글자 단위로 잘라 하위 토큰 생성 */
+  const tokens=[];
+  rawTokens.forEach(tk=>{
+    if(tk.length<=maxChars){ tokens.push(tk); }
+    else{ for(let i=0;i<tk.length;i+=maxChars) tokens.push(tk.slice(i,i+maxChars)); }
+  });
+  const lines=[];
+  let cur="";
+  for(const tk of tokens){
+    const cand = cur ? (cur+tk) : tk;
+    if(cand.length<=maxChars){ cur=cand; }
+    else{ if(cur) lines.push(cur); cur=tk; }
+  }
+  if(cur) lines.push(cur);
+  /* 최대 줄 수 초과 시 마지막 줄에 말줄임 */
+  if(lines.length>maxLines){
+    lines.length=maxLines;
+    let last=lines[maxLines-1];
+    last = last.length>=maxChars ? last.slice(0,maxChars-1)+"…" : last+"…";
+    lines[maxLines-1]=last;
+  }
+  return lines;
+}
 
 function renderMap(){
   viewport.innerHTML="";
@@ -636,18 +876,45 @@ function renderMap(){
         "font-size":Math.min(11,b.h*0.55),fill:"#fff","font-weight":800},g);
       t.textContent="🚻";
     }else{
-      /* 폰트 사이즈 통일: '교보생명' 부스(A1100 소형 셀) 기준 5.4px 고정 */
-      const fs=5.4;
-      const maxChars=Math.max(3, Math.floor(b.w/(fs*0.92))); /* 부스 폭에 맞춰 말줄임 */
-      const t=el("text",{class:"booth-label",x:b.x+b.w/2,y:b.y+b.h/2,
+      /* 칸 폭/높이에 맞춰 폰트와 줄 수를 동적으로 산정해 잘림을 최소화.
+         - 기본 5.4px에서 칸 크기에 따라 5.0~6.6px로 가변
+         - 단어(·, 공백, 슬래시 등) 단위로 줄바꿈, 칸 높이에 맞는 최대 줄 수만 표시
+         - ID 라벨(부제) 공간을 칸이 클 때만 확보 */
+      const showId = b.h>30;                              /* 큰 칸만 하단에 ID 표기 */
+      const fs = Math.max(5.0, Math.min(6.6, b.w*0.085, b.h*0.16)); /* 칸 비례 폰트 */
+      const lineH = fs*1.12;
+      const padX = 2.2;                                   /* 좌우 여백 */
+      const usableW = Math.max(8, b.w - padX*2);
+      const charW = fs*0.92;                              /* 한글 1자 폭 근사 */
+      const maxCharsPerLine = Math.max(3, Math.floor(usableW/charW));
+
+      /* 이름+ID가 차지할 세로 영역 계산: ID는 한 줄(약 lineH*0.8) */
+      const idReserve = showId ? lineH*0.92 : 0;
+      const usableH = b.h - 3 - idReserve;
+      const maxLines = Math.max(1, Math.floor(usableH/lineH));
+
+      const lines = wrapLabel(b.name, maxCharsPerLine, maxLines);
+      /* 이름 블록을 칸 중앙(또는 ID가 있으면 약간 위)에 정렬 */
+      const blockH = lines.length*lineH;
+      const centerY = b.y + (b.h - idReserve)/2;
+      const startY = centerY - blockH/2 + lineH/2;
+
+      const t=el("text",{class:"booth-label",x:b.x+b.w/2,y:startY,
         "text-anchor":"middle","dominant-baseline":"central","font-size":fs,
         "font-weight":b.big||b.cat!=="booth"?800:600,
         fill:dark?"#F7F7F5":"#111111"},g);
-      t.textContent=truncate(b.name, maxChars);
-      if(b.h>30){
-        const t2=el("text",{x:b.x+b.w/2,y:b.y+b.h/2+fs+2,"text-anchor":"middle","dominant-baseline":"central",
+      lines.forEach((ln,i)=>{
+        const ts=document.createElementNS(NS,"tspan");
+        ts.setAttribute("x", b.x+b.w/2);
+        ts.setAttribute("y", startY + i*lineH);
+        ts.textContent = ln;
+        t.appendChild(ts);
+      });
+
+      if(showId){
+        const t2=el("text",{x:b.x+b.w/2,y:b.y+b.h-3,"text-anchor":"middle","dominant-baseline":"central",
           "font-size":fs*0.72,"font-weight":700,fill:dark?"rgba(247,247,245,.7)":"#8A8A86"},g);
-        t2.textContent=b.id.replace("A2402W","A2402");
+        t2.textContent=b.id.replace("A2402W","A2402").replace("A601R","");
       }
     }
 
